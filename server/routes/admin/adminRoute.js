@@ -1,10 +1,9 @@
 import express from "express";
-import { login, session, signUp } from "../controllers/authController.js";
 import {
   deleteReportedContent,
   listAllJobs,
   listAllUsers,
-} from "../controllers/admin/usersController.js";
+} from "../../controllers/admin/usersController.js";
 
 const router = express.Router();
 

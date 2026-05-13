@@ -2,6 +2,12 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRoute from "./routes/authRoute.js";
+import jobRoute from "./routes/jobRoute.js";
+import applicationRoute from "./routes/applicationRoute.js";
+import reviewRoute from "./routes/reviewRoute.js";
+import profileRoute from "./routes/profileRoute.js";
+import adminRoute from "./routes/admin/adminRoute.js";
+import workerProfileRoute from "./routes/workerProfileRoute.js";
 
 dotenv.config();
 

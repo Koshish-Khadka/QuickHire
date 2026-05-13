@@ -9,6 +9,6 @@ const router = express.Router();
 
 router.put("/profile", updateWorkerProfile);
 router.get("/:workerId", getWorkerProfile);
-router.get("/workers", allWorkers);
+router.get("/", allWorkers);
 
 export default router;

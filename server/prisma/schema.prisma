@@ -78,13 +78,12 @@ model Job {
   id               String  @id @default(uuid())
   userId           String
   selectedWorkerId String?
-
-  title       String
-  description String
-  category    String
-  location    String
-  latitude    Decimal
-  longitude   Decimal
+  title            String
+  description      String
+  category         String
+  location         String
+  latitude         Decimal
+  longitude        Decimal
 
   startDate DateTime
   endDate   DateTime
@@ -96,10 +95,9 @@ model Job {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user           User  @relation("JobCreator", fields: [userId], references: [id])
-  selectedWorker User? @relation("JobWorker", fields: [selectedWorkerId], references: [id])
-
-  applications Application[] @relation("JobApplications")
+  user           User          @relation("JobCreator", fields: [userId], references: [id])
+  selectedWorker User?         @relation("JobWorker", fields: [selectedWorkerId], references: [id])
+  applications   Application[] @relation("JobApplications")
 }
 
 model Application {
