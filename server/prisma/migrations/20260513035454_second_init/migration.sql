@@ -1,27 +1,32 @@
-/*
-  Warnings:
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('TASKER', 'WORKER');
 
-  - You are about to drop the `jobs` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `user_profiles` table. If the table is not empty, all the data it contains will be lost.
+-- CreateEnum
+CREATE TYPE "Status" AS ENUM ('OPEN', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED');
 
-*/
+-- CreateEnum
+CREATE TYPE "URGENCY" AS ENUM ('LOW', 'MEDIUM', 'HIGH');
+
 -- CreateEnum
 CREATE TYPE "Appstatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 
--- DropForeignKey
-ALTER TABLE "jobs" DROP CONSTRAINT "jobs_selectedWorkerId_fkey";
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "phoneNumber" TEXT NOT NULL,
+    "bio" TEXT NOT NULL,
+    "role" "Role" NOT NULL DEFAULT 'WORKER',
+    "location" TEXT NOT NULL,
+    "isVerified" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
--- DropForeignKey
-ALTER TABLE "jobs" DROP CONSTRAINT "jobs_userId_fkey";
-
--- DropForeignKey
-ALTER TABLE "user_profiles" DROP CONSTRAINT "user_profiles_userId_fkey";
-
--- DropTable
-DROP TABLE "jobs";
-
--- DropTable
-DROP TABLE "user_profiles";
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "WorkerProfile" (
@@ -75,6 +80,9 @@ CREATE TABLE "Application" (
 
     CONSTRAINT "Application_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "WorkerProfile_userId_key" ON "WorkerProfile"("userId");

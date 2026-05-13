@@ -1,5 +1,6 @@
 import prisma from "../config/prisma.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export const login = async (req, res) => {
   try {
@@ -26,6 +27,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Role donot match" });
     }
     // generate token later on
+    const token = jwt.sign();
     const { password: _, ...userWithoutPassword } = user;
     res
       .status(200)
