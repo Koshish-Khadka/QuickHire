@@ -21,11 +21,11 @@ export const createJob = async (req, res) => {
       !description ||
       !category ||
       !location ||
-      !latitude ||
-      !longitude ||
+      latitude == null ||
+      longitude == null ||
       !userId
     ) {
-      return res.status(400).json({ message: "All fileds are required" });
+      return res.status(404).json({ message: "All fileds are required" });
     }
 
     const job = await prisma.job.create({
@@ -42,7 +42,7 @@ export const createJob = async (req, res) => {
         urgency,
       },
     });
-    res.status(200).json({ message: "Job Created Successfuly", data: job });
+    res.status(201).json({ message: "Job Created Successfuly", data: job });
   } catch (error) {
     console.error("Failed", error);
     res.status(500).json({ message: "Failed" });
@@ -61,17 +61,23 @@ export const listJobs = async (req, res) => {
 
 export const getJobDetail = async (req, res) => {
   try {
-    const { id } = req.params.jobId;
-    if (!id) return res.status(400).json({ message: "Id missing" });
-    const job = await prisma.job.findUnique({
-      where: {
-        id,
-      },
-    });
-    if (!job) return res.status(400).json({ message: "Job not found" });
+    const { jobId } = req.params;
+    if (!id) return res.status(404).json({ message: "Id missing" });
+
     const jobDetail = await prisma.job.findUnique({
       where: {
-        id,
+        id: jobId,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            location: true,
+          },
+        },
+        applications: true,
       },
     });
     if (!jobDetail) return res.status(400).json({ message: "Data not found" });
@@ -84,7 +90,7 @@ export const getJobDetail = async (req, res) => {
 
 export const updateJob = async (req, res) => {
   try {
-    const { id } = req.params.jobId;
+    const { jobId } = req.params;
     const {
       title,
       description,
@@ -100,7 +106,7 @@ export const updateJob = async (req, res) => {
     if (!id) return res.status(400).json({ message: "Id missing" });
     const job = await prisma.job.findUnique({
       where: {
-        id,
+        id: jobId,
       },
     });
     if (!job) return res.status(400).json({ message: "Job not found" });
@@ -132,11 +138,11 @@ export const updateJob = async (req, res) => {
 
 export const deleteJob = async (req, res) => {
   try {
-    const { id } = req.params.jobId;
-    if (!id) return res.status(400).json({ message: "Id missing" });
+    const { jobId } = req.params;
+    if (!id) return res.status(404).json({ message: "Id missing" });
     const job = await prisma.job.findUnique({
       where: {
-        id,
+        id: jobId,
       },
     });
     if (!job) return res.status(400).json({ message: "Job not found" });
@@ -154,21 +160,25 @@ export const deleteJob = async (req, res) => {
 
 export const completeJob = async (req, res) => {
   try {
-    const { id } = req.params.jobId;
-    if (!id) return res.status(400).json({ message: "Id missing" });
+    const { jobId } = req.params;
+    if (!id) return res.status(404).json({ message: "Id missing" });
     const job = await prisma.job.findUnique({
       where: {
-        id,
+        id: jobId,
       },
     });
     if (!job) return res.status(400).json({ message: "Job not found" });
-    const jobComplete = await prisma.job.update({
+    const completedJob = await prisma.job.update({
       where: {
-        id,
+        id: jobId,
       },
       data: {
         status: "COMPLETED",
       },
+    });
+    res.status(200).json({
+      message: "Job completed successfully",
+      data: completedJob,
     });
   } catch (error) {
     console.error("Failed", error);

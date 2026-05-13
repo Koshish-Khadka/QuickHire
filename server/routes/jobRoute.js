@@ -13,8 +13,8 @@ const router = express.Router();
 router.post("/", createJob);
 router.get("/", listJobs);
 router.get("/:jobId", getJobDetail);
-router.put("/:jobId", updateJob);
+router.patch("/:jobId", updateJob);
 router.delete("/:jobId", deleteJob);
-router.put("/:jobId/complete", completeJob);
+router.patch("/:jobId/complete", completeJob);
 
 export default router;
