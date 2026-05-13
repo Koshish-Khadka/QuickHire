@@ -1,5 +1,6 @@
-import prisma from "../config/prisma.js";
+import { prisma } from "../config/prisma.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export const login = async (req, res) => {
   try {
@@ -25,11 +26,20 @@ export const login = async (req, res) => {
     if (role !== user.role) {
       return res.status(400).json({ message: "Role donot match" });
     }
+    const payload = {
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+      firstName: user.firstName,
+    };
     // generate token later on
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
     const { password: _, ...userWithoutPassword } = user;
     res
       .status(200)
-      .json({ message: "login successful", data: userWithoutPassword });
+      .json({ message: "login successful", data: userWithoutPassword, token });
   } catch (error) {
     console.error("Failed to login", error);
     res.status(500).json({ message: "Failed to login" });
@@ -55,7 +65,8 @@ export const signUp = async (req, res) => {
       !firstName ||
       !lastName ||
       !phoneNumber ||
-      !location
+      !location ||
+      !role
     ) {
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -109,4 +120,10 @@ export const signUp = async (req, res) => {
     console.error("Failed to signup", error);
     res.status(500).json({ message: "Failed to signup user" });
   }
+};
+
+export const session = async (req, res) => {
+  const session = req.session;
+  res.status(200).json({ message: "Auth route works" });
+  // res.status(200).json({ user: session });
 };
