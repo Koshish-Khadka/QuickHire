@@ -129,5 +129,5 @@ model reviews {
   createdAt  DateTime @default(now())
   reviewer   User     @relation("reviewerId", fields: [reviewerId], references: [id])
   reviewee   User     @relation("revieweeId", fields: [revieweeId], references: [id])
-  job Job @relation(fields: [jobId], references: [id])
+  job        Job      @relation(fields: [jobId], references: [id])
 }

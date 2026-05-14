@@ -13,7 +13,7 @@ const router = express.Router();
 router.post("/", applyToJob);
 router.get("/:jobId/applications", getJobApplications);
 router.get("/workers/applications", getWorkerApplications);
-router.put("/applications/:applicationId", updateApplicationStatus);
+router.patch("/applications/:applicationId", updateApplicationStatus);
 
 router.get("/applications/:applicationId", getApplicationDetail);
 

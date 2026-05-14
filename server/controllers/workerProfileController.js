@@ -2,8 +2,10 @@ import { prisma } from "../config/prisma.js";
 
 export const updateWorkerProfile = async (req, res) => {
   try {
+
     const { skills, hourlyRate, availability, certifications } = req.body;
-    const userId = req.session.id;
+    const userId = req.session.userId;
+    if (!userId) return res.status(404).json({ message: "userid missing" })
     // const userId = "3e28dc8e-f40a-4ac8-8b21-3f3861d36499";
 
     if (!skills || !hourlyRate || !availability) {
@@ -33,12 +35,30 @@ export const updateWorkerProfile = async (req, res) => {
 };
 
 export const getWorkerProfile = async (req, res) => {
+
+
   try {
     const { workerId } = req.params;
     if (!workerId) return res.status(400).json({ message: "ID missing" });
     // check worker in db
     const worker = await prisma.workerProfile.findUnique({
-      where: { userId: workerId },
+      where: {
+        id: workerId,
+      },
+
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+            phoneNumber: true,
+            bio: true,
+            location: true,
+          },
+        },
+      },
     });
 
     if (!worker) return res.status(400).json({ message: "Worker not found" });
@@ -50,10 +70,21 @@ export const getWorkerProfile = async (req, res) => {
 };
 
 export const allWorkers = async (req, res) => {
+
   try {
     const workers = await prisma.workerProfile.findMany({
       include: {
-        user: true,
+        user: {
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+            phoneNumber: true,
+            bio: true,
+            location: true,
+          },
+        },
       },
     });
     res.status(200).json({ data: workers });

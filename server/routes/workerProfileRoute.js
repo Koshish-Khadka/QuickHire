@@ -4,11 +4,11 @@ import {
   getWorkerProfile,
   updateWorkerProfile,
 } from "../controllers/workerProfileController.js";
-
+import { isAuthenticated } from "../middlewares/isAuthenticated.js"
 const router = express.Router();
 
-router.put("/profile", updateWorkerProfile);
-router.get("/:workerId", getWorkerProfile);
-router.get("/", allWorkers);
+router.get("/", isAuthenticated, allWorkers);
+router.get("/:workerId", isAuthenticated, getWorkerProfile);
+router.patch("/profile", isAuthenticated, updateWorkerProfile);
 
 export default router;

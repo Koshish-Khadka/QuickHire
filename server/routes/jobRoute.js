@@ -7,14 +7,15 @@ import {
   listJobs,
   updateJob,
 } from "../controllers/jobController.js";
+import { isAuthenticated } from "../middlewares/isAuthenticated.js";
 
 const router = express.Router();
 
-router.post("/", createJob);
-router.get("/", listJobs);
-router.get("/:jobId", getJobDetail);
-router.patch("/:jobId", updateJob);
-router.delete("/:jobId", deleteJob);
-router.patch("/:jobId/complete", completeJob);
+router.post("/", isAuthenticated, createJob);
+router.get("/", isAuthenticated, listJobs);
+router.get("/:jobId", isAuthenticated, getJobDetail);
+router.patch("/:jobId", isAuthenticated, updateJob);
+router.delete("/:jobId", isAuthenticated, deleteJob);
+router.patch("/:jobId/complete", isAuthenticated, completeJob);
 
 export default router;
