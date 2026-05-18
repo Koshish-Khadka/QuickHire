@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import Landing from "./pages/Landing";
+import Landing from "./pages/Home";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 function App() {
