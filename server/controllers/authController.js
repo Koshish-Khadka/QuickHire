@@ -4,8 +4,8 @@ import jwt from "jsonwebtoken";
 
 export const login = async (req, res) => {
   try {
-    const { email, password, role } = req.body;
-    if (!email || !password || !role) {
+    const { email, password } = req.body;
+    if (!email || !password) {
       return res.status(400).json({ message: "Fields missing" });
     }
     const user = await prisma.user.findUnique({
@@ -23,9 +23,9 @@ export const login = async (req, res) => {
     }
 
     // check role
-    if (role !== user.role) {
-      return res.status(400).json({ message: "Role donot match" });
-    }
+    // if (role !== user.role) {
+    //   return res.status(400).json({ message: "Role donot match" });
+    // }
     const payload = {
       userId: user.id,
       email: user.email,
@@ -124,6 +124,5 @@ export const signUp = async (req, res) => {
 
 export const session = async (req, res) => {
   const session = req.session;
-  res.status(200).json({ message: "Auth route works" });
-  // res.status(200).json({ user: session });
+  res.status(200).json({ user: session });
 };

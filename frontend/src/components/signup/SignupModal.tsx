@@ -14,8 +14,24 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "../ui/textarea";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import api from "../../lib/axios";
+
+type Inputs = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  location: string;
+  phoneNumber: string;
+  bio: string;
+  role: string;
+};
 
 const SignupModal = ({
   step,
@@ -24,6 +40,12 @@ const SignupModal = ({
   step: number;
   setStep: (step: number) => void;
 }) => {
+  const navigate = useNavigate();
+  const { register, handleSubmit, setValue } = useForm<Inputs>({
+    defaultValues: {
+      role: "WORKER",
+    },
+  });
   const steps = [
     {
       description: "Desc for step one",
@@ -41,6 +63,24 @@ const SignupModal = ({
       title: "Step Three",
     },
   ];
+
+  const handleRegister = useMutation({
+    mutationFn: async (data: Inputs) => {
+      const response = await api.post("/auth/signup", data);
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("Registration successful! Please log in.");
+
+      navigate("/login");
+    },
+    onError: (error) => {
+      toast.error("Registration failed. Please try again.");
+      console.log(error);
+    },
+  });
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => handleRegister.mutate(data);
 
   return (
     <div className="fixed inset-0 bg-black/15 backdrop-blur-md flex justify-center items-center">
@@ -73,114 +113,133 @@ const SignupModal = ({
         <h3 className="text-center mt-8 text-2xl font-semibold ">
           Tell us about you
         </h3>
-        {step === 1 && (
-          <>
-            <form
-              action=""
-              className="w-full grid grid-cols-2 mt-8 gap-x-4 space-y-4"
-            >
-              <Field>
-                <FieldLabel htmlFor="input-field-username">
-                  First Name
-                </FieldLabel>
-                <Input
-                  id="input-field-username"
-                  type="text"
-                  placeholder="Koshish"
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="input-field-username">
-                  Last Name
-                </FieldLabel>
-                <Input
-                  id="input-field-username"
-                  type="text"
-                  placeholder="Khadka"
-                />
-              </Field>
-              <Field className="grid col-span-2">
-                <FieldLabel htmlFor="input-field-username">
-                  I want to:
-                </FieldLabel>
-                <FieldLabel>
-                  <Field orientation="horizontal">
-                    <Checkbox id="toggle-checkbox-2" name="toggle-checkbox-2" />
-                    <FieldContent>
-                      <FieldTitle>Find Work</FieldTitle>
-                      <FieldDescription>
-                        I am looking for jobs.
-                      </FieldDescription>
-                    </FieldContent>
-                  </Field>
-                </FieldLabel>
-                <FieldLabel>
-                  <Field orientation="horizontal">
-                    <Checkbox id="toggle-checkbox-2" name="toggle-checkbox-2" />
-                    <FieldContent>
-                      <FieldTitle>Post Work</FieldTitle>
-                      <FieldDescription>
-                        I want to hire people.
-                      </FieldDescription>
-                    </FieldContent>
-                  </Field>
-                </FieldLabel>
-              </Field>
-            </form>
+        <>
+          <form
+            action=""
+            className="w-full grid grid-cols-2 mt-8 gap-x-4 space-y-4"
+          >
+            {step === 1 && (
+              <>
+                <Field>
+                  <FieldLabel htmlFor="input-field-username">
+                    First Name
+                  </FieldLabel>
+                  <Input
+                    id="input-field-username"
+                    type="text"
+                    placeholder="Koshish"
+                    {...register("firstName", { required: true })}
+                  />
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="input-field-username">
+                    Last Name
+                  </FieldLabel>
+                  <Input
+                    id="input-field-username"
+                    type="text"
+                    placeholder="Khadka"
+                    {...register("lastName", { required: true })}
+                  />
+                </Field>
+                <Field className="grid col-span-2">
+                  <FieldLabel htmlFor="input-field-username">
+                    I want to:
+                  </FieldLabel>
+                  <RadioGroup
+                    className="max-w-sm"
+                    onValueChange={(value) => setValue("role", value)}
+                  >
+                    <FieldLabel htmlFor="plus-plan">
+                      <Field orientation="horizontal">
+                        <FieldContent>
+                          <FieldTitle>Find Work</FieldTitle>
+                          <FieldDescription>
+                            I am looking for a job
+                          </FieldDescription>
+                        </FieldContent>
+                        <RadioGroupItem value="WORKER" id="WORKER" />
+                      </Field>
+                    </FieldLabel>
+                    <FieldLabel htmlFor="pro-plan">
+                      <Field orientation="horizontal">
+                        <FieldContent>
+                          <FieldTitle>Post Jobs</FieldTitle>
+                          <FieldDescription>
+                            I want to hire taskers
+                          </FieldDescription>
+                        </FieldContent>
+                        <RadioGroupItem value="TASKER" id="TASKER" />
+                      </Field>
+                    </FieldLabel>
+                  </RadioGroup>
+                </Field>
+              </>
+            )}
+            {step === 2 && (
+              <>
+                <Field className="grid col-span-2">
+                  <FieldLabel htmlFor="input-field-username">Email</FieldLabel>
+                  <Input
+                    id="input-field-username"
+                    type="text"
+                    placeholder="abc@gmail.com"
+                    {...register("email", { required: true })}
+                  />
+                </Field>
+                <Field className="grid col-span-2">
+                  <FieldLabel htmlFor="input-field-password">
+                    Password
+                  </FieldLabel>
+                  <Input
+                    id="input-field-password"
+                    type="password"
+                    placeholder="••••••••"
+                    {...register("password", { required: true })}
+                  />
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="input-field-location">
+                    Location
+                  </FieldLabel>
+                  <Input
+                    id="input-field-location"
+                    type="text"
+                    placeholder="New York"
+                    {...register("location", { required: true })}
+                  />
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor="input-field-phoneNumber">
+                    Phone Number
+                  </FieldLabel>
+                  <Input
+                    id="input-field-phoneNumber"
+                    type="text"
+                    placeholder="123-456-7890"
+                    {...register("phoneNumber", { required: true })}
+                  />
+                </Field>
+                <Field className="grid col-span-2">
+                  <FieldLabel htmlFor="input-field-bio">Bio</FieldLabel>
+                  <Textarea
+                    id="textarea-message"
+                    placeholder="Type your message here."
+                    {...register("bio", { required: true })}
+                  />
+                </Field>
+              </>
+            )}
+          </form>
+          {step === 1 && (
             <button
               onClick={() => setStep(2)}
               className=" mt-8 w-full text-sm bg-[#1B7B6F] text-white px-4 py-2 rounded font-semibold transition-all duration-300 hover:scale-105 hover:ease-in-out"
             >
               Next
             </button>
-          </>
-        )}
-        {step === 2 && (
-          <>
-            <form
-              action=""
-              className="w-full grid grid-cols-2 mt-8 gap-x-4 space-y-4"
-            >
-              <Field className="grid col-span-2">
-                <FieldLabel htmlFor="input-field-username">Email</FieldLabel>
-                <Input
-                  id="input-field-username"
-                  type="text"
-                  placeholder="abc@gmail.com"
-                />
-              </Field>
-              <Field className="grid col-span-2">
-                <FieldLabel htmlFor="input-field-password">Password</FieldLabel>
-                <Input
-                  id="input-field-password"
-                  type="password"
-                  placeholder="••••••••"
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="input-field-location">Location</FieldLabel>
-                <Input
-                  id="input-field-location"
-                  type="text"
-                  placeholder="New York"
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="input-field-phone">Phone no</FieldLabel>
-                <Input
-                  id="input-field-phone"
-                  type="text"
-                  placeholder="123-456-7890"
-                />
-              </Field>
-              <Field className="grid col-span-2">
-                <FieldLabel htmlFor="input-field-bio">Bio</FieldLabel>
-                <Textarea
-                  id="textarea-message"
-                  placeholder="Type your message here."
-                />
-              </Field>
-            </form>
+          )}
+          {step === 2 && (
             <div className="flex gap-x-2">
               <button
                 onClick={() => setStep(1)}
@@ -188,12 +247,15 @@ const SignupModal = ({
               >
                 Back
               </button>
-              <button className=" mt-8 w-full text-sm bg-[#1B7B6F] text-white px-4 py-2 rounded font-semibold transition-all duration-300 hover:scale-105 hover:ease-in-out">
-                Register
+              <button
+                onClick={handleSubmit(onSubmit)}
+                className=" mt-8 w-full text-sm bg-[#1B7B6F] text-white px-4 py-2 rounded font-semibold transition-all duration-300 hover:scale-105 hover:ease-in-out"
+              >
+                {handleRegister.isPending ? "Registering..." : "Register"}
               </button>
             </div>
-          </>
-        )}
+          )}
+        </>
 
         <a
           href="/login"

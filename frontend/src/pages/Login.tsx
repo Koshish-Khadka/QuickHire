@@ -1,4 +1,50 @@
+import api from "@/lib/axios";
+import { useMutation } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setCredentials } from "../../store/authSlice";
+
+type Inputs = {
+  email: string;
+  password: string;
+};
+
 const Login = () => {
+  const { register, handleSubmit } = useForm<Inputs>();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogin = useMutation({
+    mutationFn: async (data: Inputs) => {
+      const response = await api.post("/auth/login", data);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      localStorage.setItem("token", data.token);
+      dispatch(
+        setCredentials({
+          user: data.data,
+          token: data.token,
+        }),
+      );
+
+      toast.success("Login successful!");
+      if (data.data.role === "TASKER") {
+        navigate("/dashboard");
+      } else {
+        navigate("/");
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message || "Login failed. Please try again.");
+    },
+  });
+
+  const onSubmit = (data: Inputs) => {
+    handleLogin.mutate(data);
+  };
+
   return (
     <div className="fixed inset-0 bg-black/10 backdrop-blur-md flex justify-center items-center">
       <div className="bg-white w-full max-w-96 rounded-2xl shadow-xl p-6">
@@ -12,7 +58,7 @@ const Login = () => {
           Enter your credentials below
         </p>
         {/* forms */}
-        <form className="mt-6 space-y-6">
+        <form className="mt-6 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label
               htmlFor="email"
@@ -23,6 +69,7 @@ const Login = () => {
             <input
               type="email"
               id="email"
+              {...register("email", { required: true })}
               placeholder="you@example.com"
               className="w-full px-4 py-3 rounded border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#1B7B6F] focus:border-transparent"
             />
@@ -37,6 +84,7 @@ const Login = () => {
             <input
               type="password"
               id="password"
+              {...register("password", { required: true })}
               placeholder="Enter your password"
               className="w-full px-4 py-3 rounded border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#1B7B6F] focus:border-transparent"
             />
@@ -51,7 +99,7 @@ const Login = () => {
             type="submit"
             className="w-full bg-[#1B7B6F] text-white py-2 rounded-md hover:bg-[#16695e] transition duration-300 hover:scale-[1.02]"
           >
-            Login
+            {handleLogin.isPending ? "Logging in..." : "Login"}
           </button>
         </form>
 
