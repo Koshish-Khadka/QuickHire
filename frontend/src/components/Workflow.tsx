@@ -1,4 +1,5 @@
 import { Search, Users, CheckCircle, PartyPopper } from "lucide-react";
+import { motion } from "motion/react";
 
 const steps = [
   {
@@ -23,23 +24,64 @@ const steps = [
   },
 ];
 
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+const itemVariants = {
+  hidden: {
+    y: -60,
+    opacity: 0,
+  },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut" as const,
+    },
+  },
+};
 const Workflow = () => {
   return (
     <div className="py-22 max-w-6xl mx-auto px-4">
-      <h2 className="text-4xl font-bold text-[#1B7B6F] text-center">
+      <motion.h2
+        initial={{ y: -20, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true, amount: 0.5 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        className="text-4xl font-bold text-[#1B7B6F] text-center"
+      >
         How it Works
-      </h2>
+      </motion.h2>
 
-      <p className="text-center text-gray-500 mt-3 max-w-xl mx-auto">
+      <motion.p
+        initial={{ y: -20, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true, amount: 0.5 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        className="text-center text-gray-500 mt-3 max-w-xl mx-auto"
+      >
         A simple 4-step process to get your tasks done quickly and efficiently.
-      </p>
+      </motion.p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-14">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.5 }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-14"
+      >
         {steps.map((step, index) => {
           const Icon = step.icon;
           return (
-            <div
+            <motion.div
               key={index}
+              variants={itemVariants}
               className="bg-white shadow-sm border border-gray-100 rounded-2xl p-6 text-center hover:-translate-y-2 transition-all duration-300"
             >
               <div className="w-14 h-14 mx-auto flex items-center justify-center rounded-full bg-[#1B7B6F]/10 text-[#1B7B6F]">
@@ -57,10 +99,10 @@ const Workflow = () => {
               <p className="mt-2 text-sm text-gray-500 leading-relaxed">
                 {step.desc}
               </p>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </div>
   );
 };

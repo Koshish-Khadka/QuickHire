@@ -8,6 +8,8 @@ import {
   Truck,
 } from "lucide-react";
 
+import { motion } from "motion/react";
+
 const Category = () => {
   const jobList = [
     {
@@ -24,21 +26,56 @@ const Category = () => {
     { name: "Painting", icon: <PaintBucket /> },
     { name: "Mounting", icon: <BriefcaseBusiness /> },
   ];
+
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: {
+      x: -60,
+      opacity: 0,
+    },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut" as const,
+      },
+    },
+  };
+
   return (
     <div className="pt-4 max-w-6xl m-auto">
-      <div className="flex justify-between flex-wrap items-center gap-6">
+      <motion.div
+        className="flex justify-between flex-wrap items-center gap-6"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+      >
         {jobList.map((job, index) => (
-          <div
+          <motion.div
             key={index}
-            className="flex flex-col items-center p-4 transform transition-transform duration-300 hover:scale-105 hover:ease-in-out cursor-pointer hover:bg-green-50 rounded-lg"
+            variants={itemVariants}
+            className="flex flex-col items-center p-4 transform transition-transform duration-300 hover:scale-105 cursor-pointer hover:bg-green-50 rounded-lg"
           >
             <div className="text-4xl mb-4 bg-green-50 p-4 rounded-full">
               {job.icon}
             </div>
-            <h3 className="text-sm font-medium text-gray-500">{job.name}</h3>
-          </div>
+
+            <h3 className="text-sm font-medium text-gray-500">
+              {job.name}
+            </h3>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 };
