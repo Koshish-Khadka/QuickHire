@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../store/authSlice";
 import api from "./lib/axios";
+import Tasks from "./pages/Tasks";
 function App() {
   const dispatch = useDispatch();
 
@@ -31,13 +32,14 @@ function App() {
 
     restoreSession();
   }, [dispatch]);
-  
+
   return (
     <>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/tasks" element={<Tasks />} />
       </Routes>
     </>
   );
