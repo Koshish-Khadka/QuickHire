@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { setCredentials } from "../store/authSlice";
 import api from "./lib/axios";
 import Tasks from "./pages/Tasks";
+import TaskDetail from "./pages/TaskDetail";
 function App() {
   const dispatch = useDispatch();
 
@@ -40,6 +41,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/tasks" element={<Tasks />} />
+        <Route path="/tasks/:id" element={<TaskDetail />} />
       </Routes>
     </>
   );

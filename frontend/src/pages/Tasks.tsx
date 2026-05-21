@@ -18,12 +18,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Taskcard from "@/components/Taskcard";
+import { Link } from "react-router-dom";
 
 const Tasks = () => {
   return (
     <div>
       <Navbar />
-    
       <div className="pt-18 h-screen flex">
         <div className="w-64 border-r-2 border-r-slate-200 min-h-[calc(100vh-80px)] sticky top-18 p-6 overflow-y-auto">
           <div className="border-b-2 border-b-slate-200 pb-6 mb-4">
@@ -124,13 +124,14 @@ const Tasks = () => {
           {/* Task Cards */}
           <div className="mt-4">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((_, index) => (
-              <Taskcard key={index} />
+              <Link to={`/tasks/${index}`}>
+                <Taskcard key={index} />
+              </Link>
             ))}
             {/* <Taskcard /> */}
           </div>
         </div>
       </div>
- 
     </div>
   );
 };

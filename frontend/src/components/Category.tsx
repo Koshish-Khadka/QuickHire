@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 import { motion } from "motion/react";
+import { Link } from "react-router-dom";
 
 const Category = () => {
   const jobList = [
@@ -61,11 +62,12 @@ const Category = () => {
         viewport={{ once: true }}
       >
         {jobList.map((job, index) => (
+          <Link to={'/tasks'}>
           <motion.div
             key={index}
             variants={itemVariants}
             className="flex flex-col items-center p-4 transform transition-transform duration-300 hover:scale-105 cursor-pointer hover:bg-green-50 rounded-lg"
-          >
+            >
             <div className="text-4xl mb-4 bg-green-50 p-4 rounded-full">
               {job.icon}
             </div>
@@ -74,6 +76,7 @@ const Category = () => {
               {job.name}
             </h3>
           </motion.div>
+            </Link>
         ))}
       </motion.div>
     </div>

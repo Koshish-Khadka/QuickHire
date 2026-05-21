@@ -1,4 +1,4 @@
-import Hero from "../assets/Hero.jpg";
+import Hero from "../assets/Hero2.jpg";
 import { motion } from "motion/react";
 
 const Herosection = () => {
