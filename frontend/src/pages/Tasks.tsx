@@ -122,7 +122,7 @@ const Tasks = () => {
             </div>
           </div>
           {/* Task Cards */}
-          <div className="mt-4">
+          <div className="mt-4 flex flex-col gap-4">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((_, index) => (
               <Link to={`/tasks/${index}`}>
                 <Taskcard key={index} />

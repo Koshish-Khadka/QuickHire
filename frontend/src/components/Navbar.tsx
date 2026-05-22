@@ -3,6 +3,15 @@ import { Link } from "react-router-dom";
 import { logout } from "../../store/authSlice";
 import type { RootState } from "store/store";
 import { motion } from "motion/react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -14,7 +23,9 @@ const Navbar = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="flex justify-around items-center p-4 border border-gray-200 border-b fixed top-0 left-0 right-0 bg-white z-10"
     >
-      <h1 className="text-2xl font-bold text-[#1B7B6F]">QuickHire</h1>
+      <Link to="/">
+        <h1 className="text-2xl font-bold text-[#1B7B6F]">QuickHire</h1>
+      </Link>
       <ul className="flex gap-x-6 text-sm text-slate-600">
         <li className="hover:text-[#1B7B6F] cursor-pointer">Services</li>
         <li className="hover:text-[#1B7B6F] cursor-pointer">How it Works</li>
@@ -26,12 +37,33 @@ const Navbar = () => {
             <span className="text-sm text-slate-600">
               Welcome, {user.firstName}
             </span>
-            <button
-              onClick={() => dispatch(logout())}
-              className="text-sm bg-red-600 text-white px-4 py-2 rounded font-semibold transition-all duration-300 hover:scale-105 hover:ease-in-out"
-            >
-              Logout
-            </button>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar>
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuItem>
+                    <Link to="/profile">Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    {" "}
+                    <button
+                      onClick={() => dispatch(logout())}
+                      // className="text-sm bg-red-600 text-white px-4 py-2 rounded font-semibold transition-all duration-300 hover:scale-105 hover:ease-in-out"
+                    >
+                      Logout
+                    </button>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         ) : (
           <>
@@ -40,9 +72,11 @@ const Navbar = () => {
                 Sign up / Login
               </button>
             </Link>
-            <button className="text-sm bg-[#1B7B6F] text-white px-4 py-2 rounded font-semibold transition-all duration-300 hover:scale-105 hover:ease-in-out">
-              Become a Worker
-            </button>
+            <Link to="/signup">
+              <button className="text-sm bg-[#1B7B6F] text-white px-4 py-2 rounded font-semibold transition-all duration-300 hover:scale-105 hover:ease-in-out">
+                Become a Worker
+              </button>
+            </Link>
           </>
         )}
       </div>

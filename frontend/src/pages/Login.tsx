@@ -2,9 +2,10 @@ import api from "@/lib/axios";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setCredentials } from "../../store/authSlice";
+import type { RootState } from "store/store";
 
 type Inputs = {
   email: string;
@@ -12,9 +13,13 @@ type Inputs = {
 };
 
 const Login = () => {
+  const { user } = useSelector((state: RootState) => state.auth);
   const { register, handleSubmit } = useForm<Inputs>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  if (user) {
+    navigate("/");
+  }
   const handleLogin = useMutation({
     mutationFn: async (data: Inputs) => {
       const response = await api.post("/auth/login", data);
@@ -36,8 +41,11 @@ const Login = () => {
         navigate("/");
       }
     },
-    onError: (error) => {
-      toast.error(error.message || "Login failed. Please try again.");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (error: any) => {
+      console.log(error);
+
+      toast.error(error?.response?.data?.message || "Login failed");
     },
   });
 

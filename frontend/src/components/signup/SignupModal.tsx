@@ -148,6 +148,7 @@ const SignupModal = ({
                   </FieldLabel>
                   <RadioGroup
                     className="max-w-sm"
+                    defaultValue="WORKER"
                     onValueChange={(value) => setValue("role", value)}
                   >
                     <FieldLabel htmlFor="plus-plan">
