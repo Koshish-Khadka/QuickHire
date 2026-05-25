@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
@@ -10,6 +10,12 @@ import api from "./lib/axios";
 import Tasks from "./pages/Tasks";
 import TaskDetail from "./pages/TaskDetail";
 import Profile from "./pages/Profile";
+import Applications from "./components/dashboard/pages/Applications";
+import AppliedTask from "./components/dashboard/pages/AppliedTask";
+import CompletedTask from "./components/dashboard/pages/CompletedTask";
+import CreateTask from "./components/dashboard/pages/CreateTask";
+import Task from "./components/dashboard/pages/Task";
+import ProfileSetup from "./components/dashboard/pages/ProfileSetup";
 function App() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState<boolean | null>(null);
@@ -55,7 +61,16 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/tasks/:id" element={<TaskDetail />} />
-        <Route path="/profile" element={<Profile />} />
+        {/* <Route path="/profile" element={<Profile />} /> */}
+        <Route path="/profile" element={<Profile />}>
+          <Route index element={<Navigate to="profile-setup" replace />} />
+          <Route path="applications" element={<Applications />} />
+          <Route path="applied-tasks" element={<AppliedTask />} />
+          <Route path="completed-tasks" element={<CompletedTask />} />
+          <Route path="create-task" element={<CreateTask />} />
+          <Route path="profile-setup" element={<ProfileSetup />} />
+          <Route path="my-tasks" element={<Task />} />
+        </Route>
       </Routes>
     </>
   );
