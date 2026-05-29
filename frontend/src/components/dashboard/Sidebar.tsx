@@ -5,7 +5,6 @@ import type { RootState } from "store/store";
 
 const Sidebar = () => {
   const { user } = useSelector((state: RootState) => state.auth);
-
   const location = useLocation();
   const pathname = location.pathname;
   const workerLinks = [

@@ -18,9 +18,54 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Taskcard from "@/components/Taskcard";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/lib/axios";
+import toast from "react-hot-toast";
+
+export type Tasktype = {
+  budget: number;
+  category: string;
+  createdAt: string;
+  description: string;
+  endDate: string;
+  location:string;
+  id: string;
+  status: string;
+  startDate: string;
+  title: string;
+  urgency: string;
+  userId: string;
+  user: {
+    firstName: string;
+    lastName: string;
+    location: string;
+  };
+};
 
 const Tasks = () => {
+  const [searchParams] = useSearchParams();
+
+  const category = searchParams.get("category");
+
+  const { data, isLoading, isError } = useQuery<Tasktype[]>({
+    queryKey: ["tasks", category],
+    queryFn: async () => {
+      const res = await api.get("/jobs", {
+        params: { category },
+      });
+      return res.data.data;
+    },
+    enabled: !!category, // important
+  });
+
+  if (isLoading) {
+    return <p className="text-center">Loading content...</p>;
+  }
+  if (isError) {
+    return toast.error("Failed to fetch data");
+  }
+
   return (
     <div>
       <Navbar />
@@ -123,11 +168,17 @@ const Tasks = () => {
           </div>
           {/* Task Cards */}
           <div className="mt-12 flex flex-col gap-12 ">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((_, index) => (
-              <Link to={`/tasks/${index}`}>
-                <Taskcard key={index} />
-              </Link>
-            ))}
+            {data?.length === 0 ? (
+              <p className="text-2xl text-center font-black text-red-700">
+                No task found
+              </p>
+            ) : (
+              data?.map((task) => (
+                <Link to={`/tasks/${task.id}`} key={task.id}>
+                  <Taskcard data={task} />
+                </Link>
+              ))
+            )}
             {/* <Taskcard /> */}
           </div>
         </div>

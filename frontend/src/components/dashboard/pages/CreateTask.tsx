@@ -1,6 +1,5 @@
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import React from "react";
 import {
   Select,
   SelectContent,
@@ -11,7 +10,10 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import api from "@/lib/axios";
+import toast from "react-hot-toast";
 
 type TaskFormData = {
   title: string;
@@ -27,11 +29,24 @@ type TaskFormData = {
 };
 
 const CreateTask = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, control, reset } = useForm<TaskFormData>();
+  const createTask = useMutation({
+    mutationFn: async (data: TaskFormData) => {
+      return await api.post("/jobs", data);
+    },
+    onSuccess: () => {
+      toast.success("Task created Successfully");
+      reset();
+    },
+    onError: (error) => {
+      console.log("failed to create task", error);
+      return toast.error("Failed to create Task");
+    },
+  });
 
   const onSubmit = (data: TaskFormData) => {
-    console.log(data);
-    // Here you can handle the form submission, e.g., send data to the server
+    createTask.mutate(data);
+    // console.log(data);
   };
   return (
     <div className="border p-6 rounded-md shadow">
@@ -54,7 +69,7 @@ const CreateTask = () => {
               {...register("title")}
             />
           </Field>
-          <Field>
+          {/* <Field>
             <FieldLabel htmlFor="input-field-category">Category</FieldLabel>
             <Select>
               <SelectTrigger className="w-[180px]">
@@ -68,8 +83,26 @@ const CreateTask = () => {
                 </SelectGroup>
               </SelectContent>
             </Select>
-          </Field>
+          </Field> */}
+          <Controller
+            name="category"
+            control={control}
+            render={({ field }) => (
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
 
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="Cleaning">Cleaning</SelectItem>
+                    <SelectItem value="Gardening">Gardening</SelectItem>
+                    <SelectItem value="Delivery">Delivery</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )}
+          />
           <Field>
             <FieldLabel htmlFor="input-field-description">
               Description
@@ -125,7 +158,7 @@ const CreateTask = () => {
               {...register("budget")}
             />
           </Field>
-          <Field>
+          {/* <Field>
             <FieldLabel htmlFor="input-field-category">URGENCY</FieldLabel>
             <Select>
               <SelectTrigger className="w-[180px]">
@@ -139,13 +172,32 @@ const CreateTask = () => {
                 </SelectGroup>
               </SelectContent>
             </Select>
-          </Field>
+          </Field> */}
+          <Controller
+            name="urgency"
+            control={control}
+            render={({ field }) => (
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="MEDIUM">Medium</SelectItem>
+                    <SelectItem value="HIGH">High</SelectItem>
+                    <SelectItem value="LOW">Low</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )}
+          />
           <Field>
             <FieldLabel htmlFor="input-field-address">latitude</FieldLabel>
             <Input
               id="input-field-address"
               type="number"
-              {...register("latitude")}
+              {...register("latitude", { valueAsNumber: true })}
             />
           </Field>
           <Field>
@@ -153,11 +205,11 @@ const CreateTask = () => {
             <Input
               id="input-field-address"
               type="number"
-              {...register("longitude")}
+              {...register("longitude", { valueAsNumber: true })}
             />
           </Field>
           <Button type="submit" className="col-span-2">
-            Post Task
+            {createTask.isPending ? <p>Creating.....</p> : <p>Post Task</p>}
           </Button>
         </form>
         {/* Location form */}

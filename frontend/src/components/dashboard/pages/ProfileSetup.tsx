@@ -13,7 +13,7 @@ const ProfileSetup = () => {
   const { user } = useSelector((state: RootState) => state.auth);
 
   return (
-    <div className="border p-6 rounded-md shadow">
+    <div className="p-6">
       <h2 className="text-2xl font-semibold mb-4">Profile Setup</h2>
       <p className="text-gray-600 mb-6">
         Complete your profile to get better task recommendations and increase

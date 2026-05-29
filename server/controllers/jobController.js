@@ -37,8 +37,8 @@ export const createJob = async (req, res) => {
         location,
         latitude,
         longitude,
-        startDate,
-        endDate,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
         budget,
         urgency,
         userId: userId
@@ -53,13 +53,27 @@ export const createJob = async (req, res) => {
 
 export const listJobs = async (req, res) => {
   try {
-    const jobs = await prisma.job.findMany();
+    const { category } = req.query;
+    const jobs = await prisma.job.findMany({
+      where: category ? { category } : {},
+      include: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            location: true,
+          },
+        },
+      }
+    });
     res.status(200).json({ data: jobs });
   } catch (error) {
     console.error("Failed", error);
     res.status(500).json({ message: "Failed" });
   }
 };
+
 
 export const getJobDetail = async (req, res) => {
   try {

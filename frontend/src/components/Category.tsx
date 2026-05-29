@@ -78,7 +78,7 @@ const Category = () => {
           {jobList.map((_, index) => (
             <CarouselItem key={index} className="basis-1/3 lg:basis-1/5">
               <div className="p-1">
-                <Link to={"/tasks"}>
+                <Link to={`/tasks?category=${_.name}`}>
                   <motion.div
                     key={index}
                     variants={itemVariants}
