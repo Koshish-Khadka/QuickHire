@@ -1,9 +1,10 @@
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Badge } from "./ui/badge";
+import React from "react";
+import { Badge } from "../ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-const Taskcard = () => {
+const CreatedTaskCard = () => {
   return (
-    <div className=" shadow-lg p-4 rounded-md">
+    <div className="border p-4 rounded-md">
       <div className="flex gap-x-3 justify-between items-start">
         <div className="space-y-2">
           <div className="flex items-center gap-x-3">
@@ -33,19 +34,34 @@ const Taskcard = () => {
               budget: <span className="text-sm text-gray-500">$150</span>
             </div>
           </div>
+          <div className="flex gap-4">
+            <button className="w-full text-sm border border-[#1B7B6F] text-[#1B7B6F] px-4 py-2 rounded-md font-semibold transition-all duration-300 hover:scale-105 hover:ease-in-out">
+              View application
+            </button>
+            <button className="w-full text-sm border border-[#1B7B6F] text-[#1B7B6F] px-4 py-2 rounded-md font-semibold transition-all duration-300 hover:scale-105 hover:ease-in-out">
+              Mark as completed
+            </button>
+            <button className="w-full text-sm border border-yellow-500 text-yellow-500 px-4 py-2 rounded-md font-semibold transition-all duration-300 hover:scale-105 hover:ease-in-out">
+              Edit
+            </button>
+            <button className="w-full text-sm border border-red-500 text-red-500 px-4 py-2 rounded-md font-semibold transition-all duration-300 hover:scale-105 hover:ease-in-out">
+              Delete
+            </button>
+          </div>
         </div>
         <div className="flex flex-col items-end gap-y-4">
           <div className="text-end">
             <p className="text-xl font-bold text-[#1B7B6F]">$200</p>
             <p className="text-sm text-gray-500">Fixed price</p>
           </div>
-          <button className="w-full text-sm border border-[#1B7B6F] text-[#1B7B6F] px-4 py-2 rounded-md font-semibold transition-all duration-300 hover:scale-105 hover:ease-in-out">
-            View details
-          </button>
+
+          <Badge variant="outline" className="text-sm">
+            Pending
+          </Badge>
         </div>
       </div>
     </div>
   );
 };
 
-export default Taskcard;
+export default CreatedTaskCard;

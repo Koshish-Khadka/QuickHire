@@ -10,6 +10,13 @@ import {
 
 import { motion } from "motion/react";
 import { Link } from "react-router-dom";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const Category = () => {
   const jobList = [
@@ -28,14 +35,14 @@ const Category = () => {
     { name: "Mounting", icon: <BriefcaseBusiness /> },
   ];
 
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.15,
-      },
-    },
-  };
+  // const containerVariants = {
+  //   hidden: {},
+  //   visible: {
+  //     transition: {
+  //       staggerChildren: 0.15,
+  //     },
+  //   },
+  // };
 
   const itemVariants = {
     hidden: {
@@ -54,31 +61,45 @@ const Category = () => {
 
   return (
     <div className="pt-4 max-w-6xl m-auto">
-      <motion.div
-        className="flex justify-between flex-wrap items-center gap-6"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-      >
-        {jobList.map((job, index) => (
-          <Link to={'/tasks'}>
-          <motion.div
-            key={index}
-            variants={itemVariants}
-            className="flex flex-col items-center p-4 transform transition-transform duration-300 hover:scale-105 cursor-pointer hover:bg-green-50 rounded-lg"
-            >
-            <div className="text-4xl mb-4 bg-green-50 p-4 rounded-full">
-              {job.icon}
-            </div>
+      <div className="pb-10">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl text-center pt-8 font-bold text-slate-800 leading-tight">
+          <span className="block">Get help from local</span>
 
-            <h3 className="text-sm font-medium text-gray-500">
-              {job.name}
-            </h3>
-          </motion.div>
-            </Link>
-        ))}
-      </motion.div>
+          <span className="block mt-2 text-[#1B7B6F]">professionals</span>
+        </h2>
+      </div>
+      <Carousel
+        opts={{
+          align: "start",
+        }}
+        className="w-full"
+      >
+        <CarouselContent>
+          {jobList.map((_, index) => (
+            <CarouselItem key={index} className="basis-1/3 lg:basis-1/5">
+              <div className="p-1">
+                <Link to={"/tasks"}>
+                  <motion.div
+                    key={index}
+                    variants={itemVariants}
+                    className="flex flex-col items-center p-4 transform transition-transform duration-300 hover:scale-105 cursor-pointer hover:bg-green-100 rounded-lg"
+                  >
+                    <div className="text-4xl mb-4 bg-green-50 p-4 rounded-full">
+                      {_.icon}
+                    </div>
+
+                    <h3 className="text-sm font-medium text-gray-500">
+                      {_.name}
+                    </h3>
+                  </motion.div>
+                </Link>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
     </div>
   );
 };

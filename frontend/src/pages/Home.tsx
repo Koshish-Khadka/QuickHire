@@ -18,11 +18,6 @@ const Home = () => {
         <Herosection />
         <Category />
         <Workflow />
-        {/* {user?.role === "WORKER" && (
-          <div className="pt-18 fixed inset-0 flex justify-center items-center bg-black/30 backdrop-blur z-50">
-            <Profilesetup />
-          </div>
-        )} */}
       </main>
       <footer>
         <Footer />

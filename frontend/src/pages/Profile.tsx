@@ -1,8 +1,14 @@
 import Profiledashboard from "@/components/dashboard/Profiledashboard";
 import Navbar from "@/components/Navbar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const Profile = () => {
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+  if (!token) {
+    navigate("/login");
+    return null; // or a loading spinner
+  }
   return (
     <div>
       <Navbar />

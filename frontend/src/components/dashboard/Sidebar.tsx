@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import type { RootState } from "store/store";
 
-
 const Sidebar = () => {
   const { user } = useSelector((state: RootState) => state.auth);
 

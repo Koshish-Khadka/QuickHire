@@ -16,6 +16,8 @@ import CompletedTask from "./components/dashboard/pages/CompletedTask";
 import CreateTask from "./components/dashboard/pages/CreateTask";
 import Task from "./components/dashboard/pages/Task";
 import ProfileSetup from "./components/dashboard/pages/ProfileSetup";
+import "./App.css";
+
 function App() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState<boolean | null>(null);

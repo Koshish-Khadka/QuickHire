@@ -12,10 +12,10 @@ const Herosection = () => {
       >
         <div className="space-y-2">
           {" "}
-          <h1 className="text-6xl font-bold text-[#1B7B6F] max-w-xl leading-tight">
+          <h1 className="text-6xl Hero-text font-bold text-[#1B7B6F] max-w-xl leading-tight">
             Book trusted helpers for any task
           </h1>
-          <p className="text-slate-600 text-lg max-w-lg">
+          <p className="text-slate-600 text-lg max-w-lg Hero-text">
             Find trusted local workers for cleaning, repairs, moving, gardening,
             and more.
           </p>
@@ -28,10 +28,11 @@ const Herosection = () => {
         />
       </motion.div>
       <motion.div
-         initial={{ x: 100, opacity: 0 }}
+        initial={{ x: 100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-      className="flex-1 bg-[#1B7B6F] p-8 text-white">
+        className="flex-1 bg-[#1B7B6F] p-8 text-white"
+      >
         <img src={Hero} alt="Hero" className="object-contain h-full" />
       </motion.div>
     </div>

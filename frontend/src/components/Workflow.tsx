@@ -54,7 +54,7 @@ const Workflow = () => {
         whileInView={{ y: 0, opacity: 1 }}
         viewport={{ once: true, amount: 0.5 }}
         transition={{ duration: 0.5, ease: "easeInOut" }}
-        className="text-4xl font-bold text-[#1B7B6F] text-center"
+        className="text-5xl font-bold text-[#1B7B6F] text-center Hero-text"
       >
         How it Works
       </motion.h2>
@@ -64,7 +64,7 @@ const Workflow = () => {
         whileInView={{ y: 0, opacity: 1 }}
         viewport={{ once: true, amount: 0.5 }}
         transition={{ duration: 0.5, ease: "easeInOut" }}
-        className="text-center text-gray-500 mt-3 max-w-xl mx-auto"
+        className="text-center text-gray-500 mt-3 max-w-xl mx-auto Hero-text"
       >
         A simple 4-step process to get your tasks done quickly and efficiently.
       </motion.p>

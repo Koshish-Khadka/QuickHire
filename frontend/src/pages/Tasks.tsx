@@ -95,7 +95,7 @@ const Tasks = () => {
             Clear all filters
           </button>
         </div>
-        <div className="flex-1 p-6 h-[calc(100vh-72px)] overflow-y-auto">
+        <div className="flex-1 p-6 h-[calc(100vh-72px)] max-w-5xl m-auto overflow-y-auto">
           <div className="flex gap-x-4">
             <div className="flex-1">
               <InputGroup>
@@ -122,7 +122,7 @@ const Tasks = () => {
             </div>
           </div>
           {/* Task Cards */}
-          <div className="mt-4 flex flex-col gap-4">
+          <div className="mt-12 flex flex-col gap-12 ">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((_, index) => (
               <Link to={`/tasks/${index}`}>
                 <Taskcard key={index} />

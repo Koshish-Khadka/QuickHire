@@ -1,5 +1,5 @@
-import Taskcard from "@/components/Taskcard";
-import React from "react";
+import AppliedTaskCard from "../AppliedTaskCard";
+
 
 const AppliedTask = () => {
   return (
@@ -30,7 +30,7 @@ const AppliedTask = () => {
         {[1, 2, 3, 4, 5].map((item) => {
           return (
             <>
-              <Taskcard />
+              <AppliedTaskCard />
             </>
           );
         })}
