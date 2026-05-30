@@ -57,11 +57,11 @@ const SignupModal = ({
       step: 2,
       title: "Step Two",
     },
-    {
-      description: "Desc for step three",
-      step: 3,
-      title: "Step Three",
-    },
+    // {
+    //   description: "Desc for step three",
+    //   step: 3,
+    //   title: "Step Three",
+    // },
   ];
 
   const handleRegister = useMutation({

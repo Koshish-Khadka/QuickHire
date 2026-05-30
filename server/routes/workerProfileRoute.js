@@ -1,6 +1,7 @@
 import express from "express";
 import {
   allWorkers,
+  getProfile,
   getWorkerProfile,
   updateWorkerProfile,
 } from "../controllers/workerProfileController.js";
@@ -8,7 +9,8 @@ import { isAuthenticated } from "../middlewares/isAuthenticated.js"
 const router = express.Router();
 
 router.get("/", isAuthenticated, allWorkers);
+router.get("/", isAuthenticated, getProfile);
 router.get("/:workerId", isAuthenticated, getWorkerProfile);
-router.patch("/profile", isAuthenticated, updateWorkerProfile);
+router.patch("/onboarding", isAuthenticated, updateWorkerProfile);
 
 export default router;

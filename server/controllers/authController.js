@@ -22,10 +22,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // check role
-    // if (role !== user.role) {
-    //   return res.status(400).json({ message: "Role donot match" });
-    // }
+
     const payload = {
       userId: user.id,
       email: user.email,
@@ -94,6 +91,7 @@ export const signUp = async (req, res) => {
           bio,
           role,
           location,
+          isOnboarded: false,
         },
       });
 
@@ -122,7 +120,31 @@ export const signUp = async (req, res) => {
   }
 };
 
+// export const session = async (req, res) => {
+//   const session = req.session;
+//   res.status(200).json({ user: session });
+// };
 export const session = async (req, res) => {
-  const session = req.session;
-  res.status(200).json({ user: session });
+  try {
+    const userId = req.session?.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { password, ...safeUser } = user;
+
+    return res.status(200).json({ user: safeUser });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Session error" });
+  }
 };

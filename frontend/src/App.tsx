@@ -1,10 +1,10 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../store/authSlice";
 import api from "./lib/axios";
 import Tasks from "./pages/Tasks";
@@ -17,10 +17,14 @@ import CreateTask from "./components/dashboard/pages/CreateTask";
 import Task from "./components/dashboard/pages/Task";
 import ProfileSetup from "./components/dashboard/pages/ProfileSetup";
 import "./App.css";
+import type { RootState } from "store/store";
+import Onboarding from "./pages/Onboarding";
 
 function App() {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState<boolean | null>(null);
+  const [loading, setLoading] = useState<boolean | null>(false);
+  const { user } = useSelector((state: RootState) => state.auth);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const restoreSession = async () => {
@@ -47,6 +51,12 @@ function App() {
     restoreSession();
   }, [dispatch]);
 
+  useEffect(() => {
+    if (user?.role === "WORKER" && !user.isOnboarded) {
+      navigate("/profile-complete");
+    }
+  }, [user, navigate]);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -62,6 +72,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/tasks" element={<Tasks />} />
+        <Route path="/profile-complete" element={<Onboarding />} />
         <Route path="/tasks/:id" element={<TaskDetail />} />
         {/* <Route path="/profile" element={<Profile />} /> */}
         <Route path="/profile" element={<Profile />}>

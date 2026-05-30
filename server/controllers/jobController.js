@@ -75,6 +75,26 @@ export const listJobs = async (req, res) => {
 };
 
 
+export const getCreatedTask = async (req, res) => {
+
+  try {
+    const userId = req.session.userId;
+    console.log(userId);
+    if (!userId) return res.status(404).json({ message: "Id missing" });
+    const tasks = await prisma.job.findMany({
+      where: {
+        userId: userId
+      }
+    })
+    res.status(200).json({ data: tasks })
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).json({ message: "Failed" });
+
+  }
+}
+
+
 export const getJobDetail = async (req, res) => {
   try {
     const { jobId } = req.params;

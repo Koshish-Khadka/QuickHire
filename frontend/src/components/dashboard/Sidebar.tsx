@@ -27,15 +27,16 @@ const Sidebar = () => {
 
   const taskerLinks = [
     {
-      name: "Post Task",
-      icon: <User className="w-5 h-5" />,
-      href: "/profile/create-task",
-    },
-    {
       name: "My Tasks",
       icon: <LaptopIcon className="w-5 h-5" />,
       href: "/profile/my-tasks",
     },
+    {
+      name: "Post Task",
+      icon: <User className="w-5 h-5" />,
+      href: "/profile/create-task",
+    },
+
     {
       name: "Applications",
       icon: <CheckCheck className="w-5 h-5" />,

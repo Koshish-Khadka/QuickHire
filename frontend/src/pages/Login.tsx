@@ -17,6 +17,7 @@ const Login = () => {
   const { register, handleSubmit } = useForm<Inputs>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   if (user) {
     navigate("/");
   }
@@ -26,6 +27,7 @@ const Login = () => {
       return response.data;
     },
     onSuccess: (data) => {
+      // console.log("Login data", data);
       localStorage.setItem("token", data.token);
       dispatch(
         setCredentials({
@@ -33,13 +35,7 @@ const Login = () => {
           token: data.token,
         }),
       );
-
       toast.success("Login successful!");
-      if (data.data.role === "TASKER") {
-        navigate("/dashboard");
-      } else {
-        navigate("/");
-      }
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {

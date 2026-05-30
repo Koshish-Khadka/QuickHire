@@ -1,15 +1,29 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-
-type user = {
+// type user = {
+//   id: string;
+//   firstName: string;
+//   lastName: string;
+//   email: string;
+//   phoneNumber: string;
+//   role: string;
+//   isOnboarded: boolean;
+// };
+type User = {
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
-  phoneNumber: string;
+  phoneNumber?: string;
+  bio?: string;
   role: string;
+  location?: string;
+  isVerified: boolean;
+  isOnboarded: boolean;
 };
+
 export type stateType = {
-  user: user | null;
+  user: User | null;
   token: string | null;
 };
 const initialState: stateType = {
@@ -23,7 +37,7 @@ export const counterSlice = createSlice({
   reducers: {
     setCredentials: (
       state,
-      action: PayloadAction<{ user: user; token: string }>,
+      action: PayloadAction<{ user: User; token: string }>,
     ) => {
       state.user = action.payload.user;
       state.token = action.payload.token;

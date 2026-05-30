@@ -1,7 +1,30 @@
-
+import { useQuery } from "@tanstack/react-query";
 import CreatedTaskCard from "../CreatedTaskCard";
+import api from "@/lib/axios";
+export type Task = {
+  budget: number;
+  category: string;
+  createdAt: string;
+  description: string;
+  endDate: string;
+  location: string;
+  id: string;
+  status: string;
+  startDate: string;
+  title: string;
+  urgency: string;
+  userId: string;
+};
 
 const Task = () => {
+  const { data } = useQuery<Task[]>({
+    queryKey: ["createdTask"],
+    queryFn: async () => {
+      const res = await api.get("/jobs/created");
+      return res.data.data;
+    },
+  });
+  console.log("Tasker created task", data);
   return (
     <div className="border p-6 rounded-md shadow">
       <h2 className="text-2xl font-semibold mb-4">My tasks</h2>
@@ -25,13 +48,17 @@ const Task = () => {
         </div>
       </div>
       <div className="mt-8 space-y-3">
-        {[1, 2, 3, 4, 5].map((item) => {
-          return (
-            <>
-              <CreatedTaskCard />
-            </>
-          );
-        })}
+        {data?.length === 0 ? (
+          <p>No Task created</p>
+        ) : (
+          data?.map((item) => {
+            return (
+              <>
+                <CreatedTaskCard data={item} />
+              </>
+            );
+          })
+        )}
       </div>
     </div>
   );

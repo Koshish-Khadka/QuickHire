@@ -3,6 +3,7 @@ import {
   completeJob,
   createJob,
   deleteJob,
+  getCreatedTask,
   getJobDetail,
   listJobs,
   updateJob,
@@ -11,9 +12,10 @@ import { isAuthenticated } from "../middlewares/isAuthenticated.js";
 
 const router = express.Router();
 
+router.get("/", listJobs);
+router.get("/created", isAuthenticated, getCreatedTask)
+router.get("/:jobId", getJobDetail);
 router.post("/", isAuthenticated, createJob);
-router.get("/", isAuthenticated, listJobs);
-router.get("/:jobId", isAuthenticated, getJobDetail);
 router.patch("/:jobId", isAuthenticated, updateJob);
 router.delete("/:jobId", isAuthenticated, deleteJob);
 router.patch("/:jobId/complete", isAuthenticated, completeJob);
