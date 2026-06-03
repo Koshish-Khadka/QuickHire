@@ -10,9 +10,12 @@ const DashNav = () => {
     <div className="flex items-center py-2 justify-between w-full">
       {" "}
       <p className="font-semibold">
-        {user?.firstName} {user?.lastName}
+        {user?.firstName} {user?.lastName} {" "}({user?.role})
       </p>
-      <Link to="/" className="text-sm text-gray-600 hover:text-gray-800 cursor-pointer transition flex items-center">
+      <Link
+        to="/"
+        className="text-sm text-gray-600 hover:text-gray-800 cursor-pointer transition flex items-center"
+      >
         <CircleChevronLeft className="w-4 h-4 inline-block mr-1" />
         View Site
       </Link>

@@ -1,8 +1,17 @@
-import { File, LayoutDashboard, LogOut, MessageCircle, Workflow } from "lucide-react";
+import {
+  File,
+  LayoutDashboard,
+  LogOut,
+  MessageCircle,
+  Workflow,
+} from "lucide-react";
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import type { RootState } from "store/store";
 
 const Sidebar = () => {
-  const sidebarLinks = [
+  const { user } = useSelector((state: RootState) => state.auth);
+  const sidebarTaskerLinks = [
     {
       name: "Dashboard",
       path: "",
@@ -24,6 +33,33 @@ const Sidebar = () => {
       icon: <MessageCircle className="w-6 h-6" />,
     },
   ];
+
+  const sidebarWorkerLinks = [
+    {
+      name: "Dashboard",
+      path: "",
+      icon: <LayoutDashboard className="w-6 h-6" />,
+    },
+    {
+      name: "Applied tasks",
+      path: "applied-tasks",
+      icon: <Workflow className="w-6 h-6" />,
+    },
+    {
+      name: "Completed tasks",
+      path: "completed-tasks",
+      icon: <File className="w-6 h-6" />,
+    },
+    {
+      name: "Messages",
+      path: "messages",
+      icon: <MessageCircle className="w-6 h-6" />,
+    },
+  ];
+
+  const sidebarLinks =
+    user?.role === "TASKER" ? sidebarTaskerLinks : sidebarWorkerLinks;
+
   return (
     <div className="h-full flex flex-col">
       <div>

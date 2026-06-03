@@ -4,7 +4,8 @@ export const applyToJob = async (req, res) => {
     try {
         const { jobId } = req.params;
         const { userId } = req.session; //worker id
-        if (!jobId || userId) {
+        // console.log("job id", jobId, "user id", userId)
+        if (!jobId || !userId) {
             return res.status(404).json({ message: "Id missing" })
         }
         const { coverLetter, proposedPrice } = req.body
@@ -28,7 +29,7 @@ export const applyToJob = async (req, res) => {
             data: {
                 jobId,
                 workerId: userId,
-                coverLetter,
+                coverLetter: null,
                 proposedPrice,
                 status: "PENDING"
             }
@@ -63,8 +64,15 @@ export const getJobApplications = async (req, res) => {
 
 export const getWorkerApplications = async (req, res) => {
     try {
-
-        const applications = await prisma.application.findMany({})
+        const { userId } = req.session;
+        const applications = await prisma.application.findMany({
+            where: {
+                workerId: userId
+            },
+            include: {
+                job: true
+            }
+        })
         res.status(200).json({ data: applications })
 
     } catch (error) {

@@ -110,10 +110,8 @@ model Application {
   coverLetter   String?
   proposedPrice Decimal
   status        Appstatus @default(PENDING)
-
   appliedAt   DateTime  @default(now())
   respondedAt DateTime?
-
   job       Job  @relation("JobApplications", fields: [jobId], references: [id])
   applicant User @relation("UserApplications", fields: [workerId], references: [id])
 }

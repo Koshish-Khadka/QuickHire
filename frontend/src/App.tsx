@@ -1,5 +1,4 @@
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
@@ -8,23 +7,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../store/authSlice";
 import api from "./lib/axios";
 import Tasks from "./pages/Tasks";
-import TaskDetail from "./pages/TaskDetail";
 import Profile from "./pages/Profile";
-// import Applications from "./components/dashboard/pages/Applications";
-import AppliedTask from "./components/dashboard/pages/AppliedTask";
-import CompletedTask from "./components/dashboard/pages/CompletedTask";
-import CreateTask from "./components/dashboard/pages/CreateTask";
-// import Task from "./components/dashboard/pages/Task";
-import ProfileSetup from "./components/dashboard/pages/ProfileSetup";
 import "./App.css";
 import type { RootState } from "store/store";
 import Onboarding from "./pages/Onboarding";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import DashboardLayout from "./Dashboard/DashboardLayout";
 import Dashboard from "./Dashboard/pages/Dashboard";
-import Task from "./Dashboard/pages/Task";
 import Applications from "./Dashboard/pages/Applications";
 import Messages from "./Dashboard/pages/Messages";
+import TaskDetail from "./Dashboard/components/TaskDetail";
+import Appliedtask from "./Dashboard/pages/Appliedtask";
+import UserTaskDetail from "./components/UserTaskDetail";
+import DashboardTask from "./Dashboard/pages/DashboardTask";
 
 function App() {
   const dispatch = useDispatch();
@@ -79,23 +74,16 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/profile-complete" element={<Onboarding />} />
-        <Route path="/tasks/:id" element={<TaskDetail />} />
-        {/* <Route path="/profile" element={<Profile />} /> */}
-        <Route path="/profile" element={<Profile />}>
-          <Route index element={<Navigate to="profile-setup" replace />} />
-          {/* <Route path="applications" element={<Applications />} /> */}
-          <Route path="applied-tasks" element={<AppliedTask />} />
-          <Route path="completed-tasks" element={<CompletedTask />} />
-          <Route path="create-task" element={<CreateTask />} />
-          <Route path="profile-setup" element={<ProfileSetup />} />
-          {/* <Route path="my-tasks" element={<Task />} /> */}
-        </Route>
+        <Route path="/tasks/:id" element={<UserTaskDetail />} />
+        <Route path="/profile" element={<Profile />} />
         <Route element={<ProtectedRoute />}>
           <Route path="dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
-            <Route path="my-tasks" element={<Task />} />
+            <Route path="my-tasks" element={<DashboardTask />} />
             <Route path="applications" element={<Applications />} />
             <Route path="messages" element={<Messages />} />
+            <Route path="my-tasks/:id" element={<TaskDetail />} />
+            <Route path="applied-tasks" element={<Appliedtask />} />
           </Route>
         </Route>
       </Routes>

@@ -1,12 +1,36 @@
 import { useState } from "react";
 import Taskcard from "../components/Taskcard";
-import AddTask from "../components/AddTask";
+import AddTask from "../components/Tasker/AddTask";
+import { Link } from "react-router-dom";
+import api from "@/lib/axios";
+import { useQuery } from "@tanstack/react-query";
 type category = "all" | "in-progress" | "completed";
 
-const Task = () => {
+export type Task = {
+  budget: number;
+  category: string;
+  createdAt: string;
+  description: string;
+  endDate: string;
+  location: string;
+  id: string;
+  status: string;
+  startDate: string;
+  title: string;
+  urgency: string;
+  userId: string;
+};
+
+const DashboardTask = () => {
   const [isActivemenu, setIsActiveMenu] = useState("all");
   const [taskModalOpen, setTaskModalOpen] = useState(false);
-
+  const { data } = useQuery<Task[]>({
+    queryKey: ["createdTask"],
+    queryFn: async () => {
+      const res = await api.get("/jobs/created");
+      return res.data.data;
+    },
+  });
   const handleOptions = (data: category) => {
     setIsActiveMenu(data);
   };
@@ -58,8 +82,10 @@ const Task = () => {
         </div>
       </div>
       {/* task card */}
-      {[1, 2, 3, 4, 5].map(() => (
-        <Taskcard />
+      {data?.map((data, index) => (
+        <Link to={`${data.id}`} key={index}>
+          <Taskcard data={data} role={"TASKER"}/>
+        </Link>
       ))}
       {/* modal */}
       {taskModalOpen && (
@@ -71,4 +97,4 @@ const Task = () => {
   );
 };
 
-export default Task;
+export default DashboardTask;

@@ -15,6 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import api from "@/lib/axios";
 import toast from "react-hot-toast";
 import { X } from "lucide-react";
+import { motion } from "framer-motion";
 
 type TaskFormData = {
   title: string;
@@ -29,7 +30,7 @@ type TaskFormData = {
   longitude: number;
 };
 
-const AddTask = ({onClose} : {onClose: () => void}) => {
+const AddTask = ({ onClose }: { onClose: () => void }) => {
   const { register, handleSubmit, control, reset } = useForm<TaskFormData>();
   const createTask = useMutation({
     mutationFn: async (data: TaskFormData) => {
@@ -51,8 +52,13 @@ const AddTask = ({onClose} : {onClose: () => void}) => {
     // console.log(data);
   };
   return (
-    <div className="border p-6 bg-white rounded-md shadow">
-      <div className="flex justify-between ">
+    <motion.div
+      className="border p-6 bg-white rounded-md shadow"
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <div className="flex justify-between">
         <div>
           <h2 className="text-2xl font-semibold mb-1">Post a new task</h2>
           <p className="text-gray-600 mb-6 text-[14px]">
@@ -80,40 +86,32 @@ const AddTask = ({onClose} : {onClose: () => void}) => {
               {...register("title")}
             />
           </Field>
-          {/* <Field>
-            <FieldLabel htmlFor="input-field-category">Category</FieldLabel>
-            <Select>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Theme" {...register("category")} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </Field> */}
-          <Controller
-            name="category"
-            control={control}
-            render={({ field }) => (
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
 
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="Cleaning">Cleaning</SelectItem>
-                    <SelectItem value="Gardening">Gardening</SelectItem>
-                    <SelectItem value="Delivery">Delivery</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            )}
-          />
+          <Field>
+            <FieldLabel htmlFor="input-field-category">Category</FieldLabel>
+            <Controller
+              name="category"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="Cleaning">Cleaning</SelectItem>
+                      <SelectItem value="Gardening">Gardening</SelectItem>
+                      <SelectItem value="Delivery">Delivery</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </Field>
           <Field>
             <FieldLabel htmlFor="input-field-description">
               Description
@@ -124,17 +122,6 @@ const AddTask = ({onClose} : {onClose: () => void}) => {
               {...register("description")}
             />
           </Field>
-          {/* <Field>
-            <FieldLabel htmlFor="input-field-skills">
-              Required skills
-            </FieldLabel>
-            <Input
-              id="input-field-skills"
-              type="text"
-              placeholder="e.g. Weeding, lawn mowing etc."
-              {...register("skills")}
-            />
-          </Field> */}
           <Field>
             <FieldLabel htmlFor="input-field-address">Address</FieldLabel>
             <Input
@@ -169,40 +156,32 @@ const AddTask = ({onClose} : {onClose: () => void}) => {
               {...register("budget")}
             />
           </Field>
-          {/* <Field>
-            <FieldLabel htmlFor="input-field-category">URGENCY</FieldLabel>
-            <Select>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Theme" {...register("urgency")} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="Medium">Medium</SelectItem>
-                  <SelectItem value="High">High</SelectItem>
-                  <SelectItem value="Low">Low</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </Field> */}
-          <Controller
-            name="urgency"
-            control={control}
-            render={({ field }) => (
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
 
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="MEDIUM">Medium</SelectItem>
-                    <SelectItem value="HIGH">High</SelectItem>
-                    <SelectItem value="LOW">Low</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            )}
-          />
+          <Field>
+            <FieldLabel htmlFor="input-field-category">URGENCY</FieldLabel>
+            <Controller
+              name="urgency"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="MEDIUM">Medium</SelectItem>
+                      <SelectItem value="HIGH">High</SelectItem>
+                      <SelectItem value="LOW">Low</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </Field>
           <Field>
             <FieldLabel htmlFor="input-field-address">latitude</FieldLabel>
             <Input
@@ -225,7 +204,7 @@ const AddTask = ({onClose} : {onClose: () => void}) => {
         </form>
         {/* Location form */}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
