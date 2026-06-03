@@ -21,6 +21,7 @@ const Login = () => {
   if (user) {
     navigate("/");
   }
+  
   const handleLogin = useMutation({
     mutationFn: async (data: Inputs) => {
       const response = await api.post("/auth/login", data);

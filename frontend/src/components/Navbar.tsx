@@ -60,7 +60,9 @@ const Navbar = () => {
                   <DropdownMenuItem>
                     <Link to="/profile">Profile</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="/dashboard">Dashboard</Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem>
                     {" "}
                     <button

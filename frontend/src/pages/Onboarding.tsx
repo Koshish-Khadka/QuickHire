@@ -52,8 +52,9 @@ const Onboarding = () => {
     // console.log(data);
     submitForm.mutate(data);
   };
+
   useEffect(() => {
-    if (user?.role === "TASKER") {
+    if (!user || user?.role === "TASKER") {
       navigate("/");
     }
   }, [user, navigate]);
@@ -63,6 +64,7 @@ const Onboarding = () => {
       navigate("/");
     }
   }, [user, navigate]);
+
   return (
     <div>
       <Navbar />

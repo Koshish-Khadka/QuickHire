@@ -141,7 +141,6 @@ export const session = async (req, res) => {
     }
 
     const { password, ...safeUser } = user;
-
     return res.status(200).json({ user: safeUser });
   } catch (error) {
     console.log(error);

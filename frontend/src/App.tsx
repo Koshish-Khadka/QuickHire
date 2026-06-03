@@ -10,15 +10,21 @@ import api from "./lib/axios";
 import Tasks from "./pages/Tasks";
 import TaskDetail from "./pages/TaskDetail";
 import Profile from "./pages/Profile";
-import Applications from "./components/dashboard/pages/Applications";
+// import Applications from "./components/dashboard/pages/Applications";
 import AppliedTask from "./components/dashboard/pages/AppliedTask";
 import CompletedTask from "./components/dashboard/pages/CompletedTask";
 import CreateTask from "./components/dashboard/pages/CreateTask";
-import Task from "./components/dashboard/pages/Task";
+// import Task from "./components/dashboard/pages/Task";
 import ProfileSetup from "./components/dashboard/pages/ProfileSetup";
 import "./App.css";
 import type { RootState } from "store/store";
 import Onboarding from "./pages/Onboarding";
+import ProtectedRoute from "./pages/ProtectedRoute";
+import DashboardLayout from "./Dashboard/DashboardLayout";
+import Dashboard from "./Dashboard/pages/Dashboard";
+import Task from "./Dashboard/pages/Task";
+import Applications from "./Dashboard/pages/Applications";
+import Messages from "./Dashboard/pages/Messages";
 
 function App() {
   const dispatch = useDispatch();
@@ -77,12 +83,20 @@ function App() {
         {/* <Route path="/profile" element={<Profile />} /> */}
         <Route path="/profile" element={<Profile />}>
           <Route index element={<Navigate to="profile-setup" replace />} />
-          <Route path="applications" element={<Applications />} />
+          {/* <Route path="applications" element={<Applications />} /> */}
           <Route path="applied-tasks" element={<AppliedTask />} />
           <Route path="completed-tasks" element={<CompletedTask />} />
           <Route path="create-task" element={<CreateTask />} />
           <Route path="profile-setup" element={<ProfileSetup />} />
-          <Route path="my-tasks" element={<Task />} />
+          {/* <Route path="my-tasks" element={<Task />} /> */}
+        </Route>
+        <Route element={<ProtectedRoute />}>
+          <Route path="dashboard" element={<DashboardLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="my-tasks" element={<Task />} />
+            <Route path="applications" element={<Applications />} />
+            <Route path="messages" element={<Messages />} />
+          </Route>
         </Route>
       </Routes>
     </>

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import CreatedTaskCard from "../CreatedTaskCard";
 import api from "@/lib/axios";
+
 export type Task = {
   budget: number;
   category: string;
