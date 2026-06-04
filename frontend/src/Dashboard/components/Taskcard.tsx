@@ -36,7 +36,7 @@ type TaskCardProps =
     };
 
 const Taskcard = ({ data, role }: TaskCardProps) => {
-  console.log("Worker data", data);
+  // console.log("Worker data", data);
   const task = role === "WORKER" ? data.job : data;
 
   return (

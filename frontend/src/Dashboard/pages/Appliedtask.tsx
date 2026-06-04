@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import Taskcard from "../components/Taskcard";
 import api from "@/lib/axios";
 import type { Task } from "./DashboardTask";
+import { TailSpin } from "react-loader-spinner";
 
 type WorkerApplicationType = {
   id: string;
@@ -15,7 +16,6 @@ type WorkerApplicationType = {
   job: Task;
 };
 
-
 const Appliedtask = () => {
   const { data, isLoading, isError } = useQuery<WorkerApplicationType[]>({
     queryKey: ["appliedTask"],
@@ -25,10 +25,7 @@ const Appliedtask = () => {
     },
   });
 
-  // console.log("applied task", data);
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+
   if (isError) {
     return <div>Error fetching applied tasks.</div>;
   }
@@ -36,7 +33,17 @@ const Appliedtask = () => {
     <div>
       <h1 className="text-2xl font-bold">Applied Task</h1>
       <div className="mt-6">
-        {data?.length === 0 ? (
+        {isLoading ? (
+          <div className="flex justify-center items-center h-screen">
+            <TailSpin
+              visible={true}
+              height="80"
+              width="80"
+              color="#4fa94d"
+              radius="1"
+            />
+          </div>
+        ) : data?.length === 0 ? (
           <p>No applied tasks found.</p>
         ) : (
           data?.map((data) => (

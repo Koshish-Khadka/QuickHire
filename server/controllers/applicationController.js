@@ -41,15 +41,18 @@ export const applyToJob = async (req, res) => {
     }
 };
 
+
+// function to get the applications applied to the job
 export const getJobApplications = async (req, res) => {
     try {
         const { jobId } = req.params;
-        const applications = await prisma.application.findUnique({
+        console.log("jobId jobApplications", jobId);
+        const applications = await prisma.application.findMany({
             where: {
                 jobId: jobId
             },
             include: {
-                applicant
+                applicant: true
             }
         })
         if (!applications) {
@@ -61,6 +64,29 @@ export const getJobApplications = async (req, res) => {
         res.status(500).json({ message: "Server error" })
     }
 };
+
+export const getAllJobApplications = async (req, res) => {
+    try {
+        const { userId } = req.session;
+
+        const applications = await prisma.application.findMany({
+            where: {
+                job: {
+                    userId: userId
+                }
+            },
+            include: {
+                job: true,
+                applicant: true
+            }
+        })
+        res.status(200).json({ data: applications })
+    } catch (error) {
+        console.log("failed to get all job applications", error)
+        res.status(500).json({ message: "Server error" })
+    }
+};
+
 
 export const getWorkerApplications = async (req, res) => {
     try {

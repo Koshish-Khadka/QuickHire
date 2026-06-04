@@ -3,7 +3,7 @@ import { prisma } from "../config/prisma.js";
 export const createJob = async (req, res) => {
   try {
     const userId = req.session.userId;
-    console.log("userid", userId);
+    // console.log("userid", userId);
     if (!userId) return res.status(404).json({ message: "UserId missing" })
     const {
       title,
@@ -76,10 +76,9 @@ export const listJobs = async (req, res) => {
 
 
 export const getCreatedTask = async (req, res) => {
-
   try {
     const userId = req.session.userId;
-    console.log(userId);
+    // console.log(userId);
     if (!userId) return res.status(404).json({ message: "Id missing" });
     const tasks = await prisma.job.findMany({
       where: {

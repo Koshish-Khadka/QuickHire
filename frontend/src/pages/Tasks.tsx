@@ -22,14 +22,15 @@ import { Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/lib/axios";
 import toast from "react-hot-toast";
-
+import { TailSpin } from "react-loader-spinner";
+import { useState } from "react";
 export type Tasktype = {
   budget: number;
   category: string;
   createdAt: string;
   description: string;
   endDate: string;
-  location:string;
+  location: string;
   id: string;
   status: string;
   startDate: string;
@@ -44,9 +45,13 @@ export type Tasktype = {
 };
 
 const Tasks = () => {
-  const [searchParams] = useSearchParams();
+  // const [searchParams] = useSearchParams();
 
-  const category = searchParams.get("category");
+  // const category = searchParams.get("category");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchtext, setSearchText] = useState("");
+
+  const category = searchParams.get("category") || "";
 
   const { data, isLoading, isError } = useQuery<Tasktype[]>({
     queryKey: ["tasks", category],
@@ -59,12 +64,21 @@ const Tasks = () => {
     enabled: !!category, // important
   });
 
-  if (isLoading) {
-    return <p className="text-center">Loading content...</p>;
-  }
+  const SearchResult = data?.filter((element) => {
+    const search = searchtext.toLowerCase();
+    return (
+      element.title.toLowerCase().includes(search) ||
+      element.category.toLowerCase().includes(search) ||
+      element.user.firstName.toLowerCase().includes(search) ||
+      element.location.toLowerCase().includes(search)
+    );
+  });
+
   if (isError) {
     return toast.error("Failed to fetch data");
   }
+
+  // console.log(SearchResult);
 
   return (
     <div>
@@ -76,7 +90,12 @@ const Tasks = () => {
               CATEGORY
             </h3>
             <RadioGroup
-              defaultValue="comfortable"
+              value={category}
+              onValueChange={(value) =>
+                setSearchParams({
+                  category: value,
+                })
+              }
               className="w-fit space-y-2 text-sm text-gray-700"
             >
               <div className="flex items-center gap-3">
@@ -144,7 +163,11 @@ const Tasks = () => {
           <div className="flex gap-x-4">
             <div className="flex-1">
               <InputGroup>
-                <InputGroupInput placeholder="Search..." />
+                <InputGroupInput
+                  placeholder="Search..."
+                  value={searchtext}
+                  onChange={(e) => setSearchText(e.target.value)}
+                />
                 <InputGroupAddon>
                   <Search />
                 </InputGroupAddon>
@@ -168,12 +191,22 @@ const Tasks = () => {
           </div>
           {/* Task Cards */}
           <div className="mt-12 flex flex-col gap-12 ">
-            {data?.length === 0 ? (
+            {isLoading ? (
+              <div className="flex justify-center items-center">
+                <TailSpin
+                  visible={true}
+                  height="80"
+                  width="80"
+                  color="#4fa94d"
+                  radius="1"
+                />
+              </div>
+            ) : data?.length === 0 ? (
               <p className="text-2xl text-center font-black text-red-700">
                 No task found
               </p>
             ) : (
-              data?.map((task) => (
+              SearchResult?.map((task) => (
                 <Link to={`/tasks/${task.id}`} key={task.id}>
                   <Taskcard data={task} />
                 </Link>

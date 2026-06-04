@@ -20,6 +20,7 @@ import TaskDetail from "./Dashboard/components/TaskDetail";
 import Appliedtask from "./Dashboard/pages/Appliedtask";
 import UserTaskDetail from "./components/UserTaskDetail";
 import DashboardTask from "./Dashboard/pages/DashboardTask";
+import { RotatingLines } from "react-loader-spinner";
 
 function App() {
   const dispatch = useDispatch();
@@ -61,7 +62,13 @@ function App() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p className="text-lg text-gray-500">Restoring session...</p>
+        <RotatingLines
+          visible={true}
+          height="96"
+          width="96"
+          color="grey"
+          strokeWidth="5"
+        />
       </div>
     );
   }
@@ -80,9 +87,9 @@ function App() {
           <Route path="dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="my-tasks" element={<DashboardTask />} />
+            <Route path="my-tasks/:id" element={<TaskDetail />} />
             <Route path="applications" element={<Applications />} />
             <Route path="messages" element={<Messages />} />
-            <Route path="my-tasks/:id" element={<TaskDetail />} />
             <Route path="applied-tasks" element={<Appliedtask />} />
           </Route>
         </Route>

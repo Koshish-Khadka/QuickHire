@@ -1,9 +1,18 @@
-import React from 'react'
+import api from "@/lib/axios";
+import { useQuery } from "@tanstack/react-query";
+import React from "react";
 
 const Applications = () => {
-  return (
-    <div>Applications</div>
-  )
-}
+  const { data } = useQuery({
+    queryKey: ["allApplications"],
+    queryFn: async () => {
+      const res = await api.get("/applications/workers/allApplications");
+      return res.data.data;
+    },
+  });
 
-export default Applications
+  console.log("All applications", data);
+  return <div>Applications</div>;
+};
+
+export default Applications;

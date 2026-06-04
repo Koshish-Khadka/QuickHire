@@ -14,10 +14,28 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import ApplicantCard from "./ApplicantCard";
+
+export type ApplicationType = {
+  id: string;
+  jobId: string;
+  proposedPrice: string;
+  status: string;
+  applicant: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    isVerified: boolean;
+    location: string;
+    phoneNumber: string;
+    bio: string;
+  };
+};
 
 const TaskDetail = () => {
   const { id } = useParams();
   // Get task detail
+
   const { data, isError, isLoading } = useQuery<Tasktype>({
     queryKey: ["taskdetail", id],
     queryFn: async () => {
@@ -25,6 +43,21 @@ const TaskDetail = () => {
       return res.data.data;
     },
   });
+  // get applicants applied for this job
+
+  const {
+    data: applications,
+    // isLoading: applicationsLoading,
+    // isError: applicationsError,
+  } = useQuery<ApplicationType[]>({
+    queryKey: ["JobApplications", id],
+    queryFn: async () => {
+      const res = await api.get(`/applications/${id}/applications`);
+      return res.data.data;
+    },
+  });
+
+  console.log("Application applied for this task", applications);
 
   if (isLoading) {
     return <p>Content loading...</p>;
@@ -90,7 +123,23 @@ const TaskDetail = () => {
               <MessageCircle className="w-5 h-5" /> Message
             </button> */}
           </div>
-          {/* actions */}
+          {/* Applications */}
+          <div className="mt-8 border-b-2 border-b-gray-500 pb-4">
+            <h3 className="font-semibold ">Applicants applied for this task</h3>
+            {applications?.length === 0 ? (
+              <div>
+                <p>No applicants applied till now</p>
+              </div>
+            ) : (
+              applications?.map((data) => {
+                return (
+                  <div className="mt-8 space-y-4">
+                    <ApplicantCard data={data}/>
+                  </div>
+                );
+              })
+            )}
+          </div>
         </div>
       </div>
     </div>
