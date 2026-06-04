@@ -16,6 +16,7 @@ import { TailSpin } from "react-loader-spinner";
 const UserTaskDetail = () => {
   const { id } = useParams();
   const [proposedPrice, setProposedPrice] = useState<number>(0);
+
   const { data, isError, isLoading } = useQuery<Tasktype>({
     queryKey: ["taskdetail", id],
     queryFn: async () => {
@@ -47,8 +48,17 @@ const UserTaskDetail = () => {
       navigate("/login");
       return toast.error("Please login to apply for this task");
     }
+    if (hasApplied) {
+      return toast.error("You have already applied for this task");
+    }
     applyApplication.mutate();
   };
+
+  const hasApplied = Boolean(
+    data?.applications?.find(
+      (application) => application.workerId === user?.id,
+    ),
+  );
 
   if (isError) {
     return toast.error("Error");
@@ -152,11 +162,18 @@ const UserTaskDetail = () => {
                       onChange={(e) => setProposedPrice(Number(e.target.value))}
                     />
                   </Field>
-                  <button
+                  {/* <button
                     className="w-full mt-6 bg-[#1B7B6F] text-white py-3 rounded-md font-semibold hover:opacity-90 transition"
                     onClick={handleApply}
                   >
                     Apply for this Task
+                  </button> */}
+                  <button
+                    disabled={hasApplied}
+                    className="w-full mt-6 bg-[#1B7B6F] text-white py-3 rounded-md font-semibold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={handleApply}
+                  >
+                    {hasApplied ? "Already Applied" : "Apply for this Task"}
                   </button>
 
                   <div className="mt-6 space-y-4 text-sm text-gray-600">

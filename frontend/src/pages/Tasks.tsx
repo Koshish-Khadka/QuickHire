@@ -25,6 +25,10 @@ import toast from "react-hot-toast";
 import { TailSpin } from "react-loader-spinner";
 import { useState } from "react";
 export type Tasktype = {
+  applications?: {
+    workerId: string;
+    status: string;
+  }[];
   budget: number;
   category: string;
   createdAt: string;
