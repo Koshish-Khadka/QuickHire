@@ -12,6 +12,7 @@ import { Label } from "./ui/label";
 import { Field } from "./ui/field";
 import { useState } from "react";
 import { TailSpin } from "react-loader-spinner";
+import Footer from "./Footer";
 
 const UserTaskDetail = () => {
   const { id } = useParams();
@@ -204,6 +205,7 @@ const UserTaskDetail = () => {
           </div>
         </div>
       )}
+      <Footer/>
     </div>
   );
 };

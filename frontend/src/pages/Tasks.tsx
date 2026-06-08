@@ -24,6 +24,15 @@ import api from "@/lib/axios";
 import toast from "react-hot-toast";
 import { TailSpin } from "react-loader-spinner";
 import { useState } from "react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+
 export type Tasktype = {
   applications?: {
     workerId: string;
@@ -49,22 +58,21 @@ export type Tasktype = {
 };
 
 const Tasks = () => {
-  // const [searchParams] = useSearchParams();
-
-  // const category = searchParams.get("category");
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchtext, setSearchText] = useState("");
-
   const category = searchParams.get("category") || "";
+  const [page, setPage] = useState(1);
+  const ITEMS_PER_PAGE = 2;
 
   const { data, isLoading, isError } = useQuery<Tasktype[]>({
-    queryKey: ["tasks", category],
+    queryKey: ["tasks", category, page],
     queryFn: async () => {
-      const res = await api.get("/jobs", {
+      const res = await api.get(`/jobs`, {
         params: { category },
       });
       return res.data.data;
     },
+    placeholderData: (previousData) => previousData,
     enabled: !!category, // important
   });
 
@@ -77,13 +85,27 @@ const Tasks = () => {
       element.location.toLowerCase().includes(search)
     );
   });
+  const totalPages = Math.ceil((SearchResult?.length || 0) / ITEMS_PER_PAGE);
+  const paginatedTasks = SearchResult?.slice(
+    (page - 1) * ITEMS_PER_PAGE,
+    page * ITEMS_PER_PAGE,
+  );
+
+  const handlePageIncrement = () => {
+    if (page < totalPages) {
+      setPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePageDecrement = () => {
+    if (page > 1) {
+      setPage((prev) => prev - 1);
+    }
+  };
 
   if (isError) {
     return toast.error("Failed to fetch data");
   }
-
-  // console.log(SearchResult);
-
   return (
     <div>
       <Navbar />
@@ -210,7 +232,7 @@ const Tasks = () => {
                 No task found
               </p>
             ) : (
-              SearchResult?.map((task) => (
+              paginatedTasks?.map((task) => (
                 <Link to={`/tasks/${task.id}`} key={task.id}>
                   <Taskcard data={task} />
                 </Link>
@@ -219,6 +241,47 @@ const Tasks = () => {
             {/* <Taskcard /> */}
           </div>
         </div>
+      </div>
+      {/* pagination  */}
+      <div>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePageDecrement();
+                }}
+              />
+            </PaginationItem>
+
+            {Array.from({ length: totalPages }, (_, i) => (
+              <PaginationItem key={i + 1}>
+                <PaginationLink
+                  href="#"
+                  isActive={page === i + 1}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setPage(i + 1);
+                  }}
+                >
+                  {i + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+
+            <PaginationItem>
+              <PaginationNext
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePageIncrement();
+                }}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </div>
   );
