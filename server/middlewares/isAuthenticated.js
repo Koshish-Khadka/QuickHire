@@ -39,3 +39,10 @@ export const protectAdmin = (req, res, next) => {
   }
   next();
 };
+
+export const canApply = (req, res, next) => {
+  if (req.session.role !== "WORKER") {
+    return res.status(403).json({ error: "Access denied" });
+  }
+  next();
+};

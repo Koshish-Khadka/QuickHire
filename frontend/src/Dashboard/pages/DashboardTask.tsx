@@ -4,6 +4,8 @@ import AddTask from "../components/Tasker/AddTask";
 import { Link } from "react-router-dom";
 import api from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { TailSpin } from "react-loader-spinner";
 type category = "all" | "in-progress" | "completed";
 
 export type Task = {
@@ -24,7 +26,8 @@ export type Task = {
 const DashboardTask = () => {
   const [isActivemenu, setIsActiveMenu] = useState("all");
   const [taskModalOpen, setTaskModalOpen] = useState(false);
-  const { data } = useQuery<Task[]>({
+
+  const { data, isLoading, isError } = useQuery<Task[]>({
     queryKey: ["createdTask"],
     queryFn: async () => {
       const res = await api.get("/jobs/created");
@@ -34,6 +37,11 @@ const DashboardTask = () => {
   const handleOptions = (data: category) => {
     setIsActiveMenu(data);
   };
+
+  if (isError) {
+    toast.error("Failed to fetch data");
+    return;
+  }
 
   return (
     <div>
@@ -82,11 +90,27 @@ const DashboardTask = () => {
         </div>
       </div>
       {/* task card */}
-      {data?.map((data, index) => (
-        <Link to={`${data.id}`} key={index}>
-          <Taskcard data={data} role={"TASKER"}/>
-        </Link>
-      ))}
+      {isLoading ? (
+        <div className="flex justify-center items-center h-screen">
+          <TailSpin
+            visible={true}
+            height="80"
+            width="80"
+            color="#4fa94d"
+            radius="1"
+          />
+        </div>
+      ) : data?.length === 0 ? (
+        <p className="text-2xl text-center font-black text-red-700">
+          No task found
+        </p>
+      ) : (
+        data?.map((data, index) => (
+          <Link to={`${data.id}`} key={index}>
+            <Taskcard data={data} role={"TASKER"} />
+          </Link>
+        ))
+      )}
       {/* modal */}
       {taskModalOpen && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-30 flex justify-center items-center">

@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ApplicantCard from "./ApplicantCard";
+import { TailSpin } from "react-loader-spinner";
 
 export type ApplicationType = {
   id: string;
@@ -30,6 +31,7 @@ export type ApplicationType = {
     phoneNumber: string;
     bio: string;
   };
+  job: Tasktype;
 };
 
 const TaskDetail = () => {
@@ -59,11 +61,21 @@ const TaskDetail = () => {
 
   console.log("Application applied for this task", applications);
 
-  if (isLoading) {
-    return <p>Content loading...</p>;
-  }
   if (isError) {
     return toast.error("Error");
+  }
+  if (isLoading) {
+    return (
+      <div className="flex justify-center h-screen items-center">
+        <TailSpin
+          visible={true}
+          height="80"
+          width="80"
+          color="#4fa94d"
+          radius="1"
+        />
+      </div>
+    );
   }
 
   return (
@@ -134,7 +146,7 @@ const TaskDetail = () => {
               applications?.map((data) => {
                 return (
                   <div className="mt-8 space-y-4">
-                    <ApplicantCard data={data}/>
+                    <ApplicantCard data={data} />
                   </div>
                 );
               })

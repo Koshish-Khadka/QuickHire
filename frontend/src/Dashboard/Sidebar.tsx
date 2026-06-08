@@ -5,12 +5,22 @@ import {
   MessageCircle,
   Workflow,
 } from "lucide-react";
-import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
+import { logout } from "../../store/authSlice";
 import type { RootState } from "store/store";
 
 const Sidebar = () => {
   const { user } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    toast.success("Logged out");
+    navigate("/");
+  };
   const sidebarTaskerLinks = [
     {
       name: "Dashboard",
@@ -92,7 +102,10 @@ const Sidebar = () => {
       </div>
 
       {/* Logout */}
-      <button className="mt-auto flex items-center gap-4 px-4 py-3 border-t w-full">
+      <button
+        className="mt-auto flex items-center gap-4 px-4 py-3 border-t w-full transition-all hover:text-red-500 duration-150"
+        onClick={handleLogout}
+      >
         <LogOut className="w-6 h-6" />
         <span className="md:block hidden">Logout</span>
       </button>

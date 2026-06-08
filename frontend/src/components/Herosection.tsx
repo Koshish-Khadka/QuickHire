@@ -1,4 +1,4 @@
-import Hero from "../assets/Hero2.jpg";
+import Moving from "../../src/assets/Assembly.jpg";
 import { motion } from "motion/react";
 
 const Herosection = () => {
@@ -31,9 +31,9 @@ const Herosection = () => {
         initial={{ x: 100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="flex-1 bg-[#1B7B6F] p-8 text-white"
+        className="flex-1 bg-[#1B7B6F] p-4 text-white"
       >
-        <img src={Hero} alt="Hero" className="object-contain h-full" />
+        <img src={Moving} alt="Hero" className="object-contain h-full" />
       </motion.div>
     </div>
   );

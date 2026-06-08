@@ -23,8 +23,6 @@ export const applyToJob = async (req, res) => {
         if (job.status !== "OPEN" || job.selectedWorkerId !== null) {
             return res.status(400).json({ message: "This Job has already been assigned" })
         }
-
-
         const application = await prisma.application.create({
             data: {
                 jobId,
@@ -52,7 +50,8 @@ export const getJobApplications = async (req, res) => {
                 jobId: jobId
             },
             include: {
-                applicant: true
+                applicant: true,
+                job: true,
             }
         })
         if (!applications) {
@@ -110,6 +109,7 @@ export const getWorkerApplications = async (req, res) => {
 export const updateApplicationStatus = async (req, res) => {
     try {
         const { applicationId } = req.params
+        
         if (!applicationId) return res.status(404).json({ message: "ids missing" })
 
         // find that application exists

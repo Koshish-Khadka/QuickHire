@@ -62,7 +62,7 @@ const Tasks = () => {
   const [searchtext, setSearchText] = useState("");
   const category = searchParams.get("category") || "";
   const [page, setPage] = useState(1);
-  const ITEMS_PER_PAGE = 2;
+  const ITEMS_PER_PAGE = 4;
 
   const { data, isLoading, isError } = useQuery<Tasktype[]>({
     queryKey: ["tasks", category, page],
@@ -85,7 +85,9 @@ const Tasks = () => {
       element.location.toLowerCase().includes(search)
     );
   });
+
   const totalPages = Math.ceil((SearchResult?.length || 0) / ITEMS_PER_PAGE);
+
   const paginatedTasks = SearchResult?.slice(
     (page - 1) * ITEMS_PER_PAGE,
     page * ITEMS_PER_PAGE,
@@ -117,6 +119,7 @@ const Tasks = () => {
             </h3>
             <RadioGroup
               value={category}
+              defaultValue="Assembly"
               onValueChange={(value) =>
                 setSearchParams({
                   category: value,

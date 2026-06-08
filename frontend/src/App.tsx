@@ -20,7 +20,8 @@ import TaskDetail from "./Dashboard/components/TaskDetail";
 import Appliedtask from "./Dashboard/pages/Appliedtask";
 import UserTaskDetail from "./components/UserTaskDetail";
 import DashboardTask from "./Dashboard/pages/DashboardTask";
-import { RotatingLines } from "react-loader-spinner";
+import { TailSpin } from "react-loader-spinner";
+// import ApplicantcartDetail from "./Dashboard/components/ApplicantcartDetail";
 
 function App() {
   const dispatch = useDispatch();
@@ -62,12 +63,12 @@ function App() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <RotatingLines
+        <TailSpin
           visible={true}
-          height="96"
-          width="96"
-          color="grey"
-          strokeWidth="5"
+          height="80"
+          width="80"
+          color="#4fa94d"
+          radius="1"
         />
       </div>
     );
@@ -89,6 +90,7 @@ function App() {
             <Route path="my-tasks" element={<DashboardTask />} />
             <Route path="my-tasks/:id" element={<TaskDetail />} />
             <Route path="applications" element={<Applications />} />
+  
             <Route path="messages" element={<Messages />} />
             <Route path="applied-tasks" element={<Appliedtask />} />
           </Route>

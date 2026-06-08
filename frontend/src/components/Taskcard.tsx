@@ -4,7 +4,7 @@ import { Badge } from "./ui/badge";
 
 const Taskcard = ({ data }: { data: Tasktype }) => {
   return (
-    <div className=" shadow-lg p-4 rounded-md">
+    <div className="shadow-md p-4 rounded-md transition-all hover:scale-101 hover:shadow-lg duration-200">
       <div className="flex gap-x-3 justify-between items-start">
         <div className="space-y-2">
           <div className="flex items-center gap-x-3">

@@ -16,7 +16,9 @@ import Footer from "./Footer";
 
 const UserTaskDetail = () => {
   const { id } = useParams();
-  const [proposedPrice, setProposedPrice] = useState<number>(0);
+  const [proposedPrice, setProposedPrice] = useState<string>("");
+  const { user } = useSelector((state: RootState) => state.auth);
+  const navigate = useNavigate();
 
   const { data, isError, isLoading } = useQuery<Tasktype>({
     queryKey: ["taskdetail", id],
@@ -25,13 +27,15 @@ const UserTaskDetail = () => {
       return res.data.data;
     },
   });
-  const { user } = useSelector((state: RootState) => state.auth);
-  const navigate = useNavigate();
 
   const applyApplication = useMutation({
     mutationFn: async () => {
+      // if (!proposedPrice || Number(proposedPrice) <= 0) {
+      //   toast.error("Please enter a valid offer");
+      //   return;
+      // }
       const res = await api.post(`/applications/${id}`, {
-        proposedPrice,
+        proposedPrice: Number(proposedPrice),
       });
       return res.data;
     },
@@ -153,29 +157,29 @@ const UserTaskDetail = () => {
                 <div className="bg-white border rounded-lg shadow-md border-t-4 border-t-[#1B7B6F] p-6">
                   <p className="text-sm text-gray-500">Starting Price</p>
                   <h2 className="text-4xl font-bold mt-1">$140</h2>
-                  <Field className="mt-4">
-                    <Label className="text-sm text-gray-500 text-center">
-                      Make an offer
-                    </Label>
-                    <Input
-                      placeholder="Enter your proposed price"
-                      value={proposedPrice}
-                      onChange={(e) => setProposedPrice(Number(e.target.value))}
-                    />
-                  </Field>
-                  {/* <button
-                    className="w-full mt-6 bg-[#1B7B6F] text-white py-3 rounded-md font-semibold hover:opacity-90 transition"
-                    onClick={handleApply}
-                  >
-                    Apply for this Task
-                  </button> */}
-                  <button
-                    disabled={hasApplied}
-                    className="w-full mt-6 bg-[#1B7B6F] text-white py-3 rounded-md font-semibold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                    onClick={handleApply}
-                  >
-                    {hasApplied ? "Already Applied" : "Apply for this Task"}
-                  </button>
+
+                  {user?.role !== "TASKER" && (
+                    <>
+                      <Field className="mt-4">
+                        <Label className="text-sm text-gray-500 text-center">
+                          Make an offer
+                        </Label>
+                        <Input
+                          placeholder="Enter your proposed price"
+                          value={proposedPrice}
+                          onChange={(e) => setProposedPrice(e.target.value)}
+                        />
+                      </Field>
+
+                      <button
+                        disabled={hasApplied}
+                        className="w-full mt-6 bg-[#1B7B6F] text-white py-3 rounded-md font-semibold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        onClick={handleApply}
+                      >
+                        {hasApplied ? "Already Applied" : "Apply for this Task"}
+                      </button>
+                    </>
+                  )}
 
                   <div className="mt-6 space-y-4 text-sm text-gray-600">
                     <div className="flex justify-between">
@@ -205,7 +209,7 @@ const UserTaskDetail = () => {
           </div>
         </div>
       )}
-      <Footer/>
+      <Footer />
     </div>
   );
 };
