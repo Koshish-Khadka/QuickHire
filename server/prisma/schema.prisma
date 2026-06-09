@@ -33,6 +33,7 @@ enum Appstatus {
   PENDING
   APPROVED
   REJECTED
+  AUTO_REJECTED
 }
 
 model User {
@@ -72,8 +73,7 @@ model WorkerProfile {
   certifications    String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
+  user              User     @relation(fields: [userId], references: [id])
 }
 
 model Job {
@@ -110,10 +110,10 @@ model Application {
   coverLetter   String?
   proposedPrice Decimal
   status        Appstatus @default(PENDING)
-  appliedAt   DateTime  @default(now())
-  respondedAt DateTime?
-  job       Job  @relation("JobApplications", fields: [jobId], references: [id])
-  applicant User @relation("UserApplications", fields: [workerId], references: [id])
+  appliedAt     DateTime  @default(now())
+  respondedAt   DateTime?
+  job           Job       @relation("JobApplications", fields: [jobId], references: [id])
+  applicant     User      @relation("UserApplications", fields: [workerId], references: [id])
 }
 
 model reviews {

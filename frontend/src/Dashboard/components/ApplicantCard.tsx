@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MapPin, Calendar, Wallet } from "lucide-react";
 import type { ApplicationType } from "./TaskDetail";
@@ -14,6 +13,9 @@ import {
 } from "@/components/ui/dialog";
 import { FieldGroup } from "@/components/ui/field";
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import api from "@/lib/axios";
+import toast from "react-hot-toast";
 
 type ApplicantCardProps = {
   data: ApplicationType;
@@ -24,6 +26,25 @@ export default function ApplicantCard({ data }: ApplicantCardProps) {
   const proposedPrice = Number(data.proposedPrice);
   const budget = Number(data.job.budget);
   const hasValidOffer = proposedPrice > 0 && proposedPrice > budget;
+
+  const updateStatus = useMutation({
+    mutationFn: async (variables: { id: string; workerId: string }) => {
+      const res = await api.patch("/applications/update", {
+        id: variables.id,
+        workerId: variables.workerId,
+      });
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success("Status changed");
+      setOpenAssignDialog(false);
+    },
+    onError: () => {
+      toast.error("Failed to perform action");
+    },
+  });
+
+  // console.log("data", data.status);
   return (
     <Card className="w-full">
       <CardHeader className="flex flex-row items-start justify-between">
@@ -47,17 +68,11 @@ export default function ApplicantCard({ data }: ApplicantCardProps) {
           </div>
         </div>
 
-        <Badge
-          variant={
-            data.status === "PENDING"
-              ? "secondary"
-              : data.status === "ACCEPTED"
-                ? "default"
-                : "destructive"
-          }
+        <div
+          className={`text-[12px] text-white px-2 py-1 rounded-3xl font-normal ${data.status === "APPROVED" ? "bg-green-500" : data.status === "PENDING" ? "bg-yellow-500" : "bg-red-500"}`}
         >
           {data.status}
-        </Badge>
+        </div>
       </CardHeader>
 
       <CardContent className="space-y-4">
@@ -85,47 +100,51 @@ export default function ApplicantCard({ data }: ApplicantCardProps) {
         </div>
 
         <div className="flex gap-3 pt-2">
-          <Button size="sm" onClick={() => setOpenAssignDialog(true)}>
-            Accept
-          </Button>
+          {data.status === "PENDING" && (
+            <>
+              <Button size="sm" onClick={() => setOpenAssignDialog(true)}>
+                Accept
+              </Button>
 
-          <Button size="sm" variant="destructive">
-            Reject
-          </Button>
-          <Dialog>
-            <form>
-              <DialogTrigger asChild>
-                <Button size="sm" variant="outline">
-                  View Profile
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-sm">
-                <DialogHeader className="border-b-2 border-b-gray-300 pb-2">
-                  <DialogTitle>Worker Profile</DialogTitle>
-                  <DialogDescription>
-                    Below is the full detail of the worker.
-                  </DialogDescription>
-                </DialogHeader>
-                <FieldGroup className="justify-center items-center ">
-                  <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                  <h2 className="text-xl font-bold">
-                    {" "}
-                    {data?.applicant.firstName[0]}
-                    {data?.applicant.lastName[0]}
-                  </h2>
-                  <div className="flex gap-4">
-                    <p>{data.applicant.location}</p>
-                    <p>{data.applicant.email}</p>
-                    <p>{data.applicant.phoneNumber}</p>
-                  </div>
-                  <div>{data.applicant.bio}</div>
-                </FieldGroup>
-              </DialogContent>
-            </form>
-          </Dialog>
+              <Button size="sm" variant="destructive">
+                Reject
+              </Button>
+              <Dialog>
+                <form>
+                  <DialogTrigger asChild>
+                    <Button size="sm" variant="outline">
+                      View Profile
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-sm">
+                    <DialogHeader className="border-b-2 border-b-gray-300 pb-2">
+                      <DialogTitle>Worker Profile</DialogTitle>
+                      <DialogDescription>
+                        Below is the full detail of the worker.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <FieldGroup className="justify-center items-center ">
+                      <Avatar>
+                        <AvatarImage src="https://github.com/shadcn.png" />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+                      <h2 className="text-xl font-bold">
+                        {" "}
+                        {data?.applicant.firstName[0]}
+                        {data?.applicant.lastName[0]}
+                      </h2>
+                      <div className="flex gap-4">
+                        <p>{data.applicant.location}</p>
+                        <p>{data.applicant.email}</p>
+                        <p>{data.applicant.phoneNumber}</p>
+                      </div>
+                      <div>{data.applicant.bio}</div>
+                    </FieldGroup>
+                  </DialogContent>
+                </form>
+              </Dialog>
+            </>
+          )}
 
           {/*  */}
           <Dialog open={openAssignDialog} onOpenChange={setOpenAssignDialog}>
@@ -233,7 +252,10 @@ export default function ApplicantCard({ data }: ApplicantCardProps) {
                   <Button
                     onClick={() => {
                       // call accept mutation here
-                      console.log("Assign worker");
+                      updateStatus.mutate({
+                        id: data.id,
+                        workerId: data?.applicant.id,
+                      });
                     }}
                   >
                     Assign Worker

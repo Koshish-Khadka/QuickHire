@@ -25,6 +25,7 @@ const Appliedtask = () => {
     },
   });
 
+  const filterData = data?.filter((items) => items.status !== "APPROVED");
 
   if (isError) {
     return <div>Error fetching applied tasks.</div>;
@@ -43,10 +44,10 @@ const Appliedtask = () => {
               radius="1"
             />
           </div>
-        ) : data?.length === 0 ? (
+        ) : filterData?.length === 0 ? (
           <p>No applied tasks found.</p>
         ) : (
-          data?.map((data) => (
+          filterData?.map((data) => (
             <div key={data.id}>
               <Taskcard data={data.job} role={"WORKER"} />
             </div>

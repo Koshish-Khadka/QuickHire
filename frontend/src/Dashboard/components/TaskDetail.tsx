@@ -23,6 +23,7 @@ export type ApplicationType = {
   proposedPrice: string;
   status: string;
   applicant: {
+    id: string;
     email: string;
     firstName: string;
     lastName: string;
@@ -58,8 +59,6 @@ const TaskDetail = () => {
       return res.data.data;
     },
   });
-
-  console.log("Application applied for this task", applications);
 
   if (isError) {
     return toast.error("Error");

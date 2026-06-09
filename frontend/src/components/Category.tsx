@@ -67,6 +67,9 @@ const Category = () => {
 
           <span className="block mt-2 text-[#1B7B6F]">professionals</span>
         </h2>
+        <h3 className="text-3xl font-bold border-b-2 border-b-[#1B7B6F] w-fit mt-8">
+          Services
+        </h3>
       </div>
       <Carousel
         opts={{

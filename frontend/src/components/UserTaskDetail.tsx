@@ -30,10 +30,6 @@ const UserTaskDetail = () => {
 
   const applyApplication = useMutation({
     mutationFn: async () => {
-      // if (!proposedPrice || Number(proposedPrice) <= 0) {
-      //   toast.error("Please enter a valid offer");
-      //   return;
-      // }
       const res = await api.post(`/applications/${id}`, {
         proposedPrice: Number(proposedPrice),
       });
@@ -158,28 +154,26 @@ const UserTaskDetail = () => {
                   <p className="text-sm text-gray-500">Starting Price</p>
                   <h2 className="text-4xl font-bold mt-1">$140</h2>
 
-                  {user?.role !== "TASKER" && (
-                    <>
-                      <Field className="mt-4">
-                        <Label className="text-sm text-gray-500 text-center">
-                          Make an offer
-                        </Label>
-                        <Input
-                          placeholder="Enter your proposed price"
-                          value={proposedPrice}
-                          onChange={(e) => setProposedPrice(e.target.value)}
-                        />
-                      </Field>
-
-                      <button
-                        disabled={hasApplied}
-                        className="w-full mt-6 bg-[#1B7B6F] text-white py-3 rounded-md font-semibold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                        onClick={handleApply}
-                      >
-                        {hasApplied ? "Already Applied" : "Apply for this Task"}
-                      </button>
-                    </>
+                  {!hasApplied && (
+                    <Field className="mt-4">
+                      <Label className="text-sm text-gray-500 text-center">
+                        Make an offer
+                      </Label>
+                      <Input
+                        placeholder="Enter your proposed price"
+                        value={proposedPrice}
+                        onChange={(e) => setProposedPrice(e.target.value)}
+                      />
+                    </Field>
                   )}
+
+                  <button
+                    disabled={hasApplied}
+                    className="w-full mt-6 bg-[#1B7B6F] text-white py-3 rounded-md font-semibold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={handleApply}
+                  >
+                    {hasApplied ? "Already Applied" : "Apply for this Task"}
+                  </button>
 
                   <div className="mt-6 space-y-4 text-sm text-gray-600">
                     <div className="flex justify-between">

@@ -104,8 +104,10 @@ const AddTask = ({ onClose }: { onClose: () => void }) => {
                   <SelectContent>
                     <SelectGroup>
                       <SelectItem value="Cleaning">Cleaning</SelectItem>
-                      <SelectItem value="Gardening">Gardening</SelectItem>
-                      <SelectItem value="Delivery">Delivery</SelectItem>
+                      <SelectItem value="Assembly">Assembly</SelectItem>
+                      <SelectItem value="Moving">Moving</SelectItem>
+                      <SelectItem value="HomeRepairs">Home Repair</SelectItem>
+                      <SelectItem value="Outdoor+Help">Outdoor Help</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>

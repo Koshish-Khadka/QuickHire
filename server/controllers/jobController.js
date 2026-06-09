@@ -51,6 +51,7 @@ export const createJob = async (req, res) => {
   }
 };
 
+
 export const listJobs = async (req, res) => {
   try {
     const { category } = req.query;
@@ -74,7 +75,7 @@ export const listJobs = async (req, res) => {
   }
 };
 
-
+// get created task -Tasker
 export const getCreatedTask = async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -82,7 +83,7 @@ export const getCreatedTask = async (req, res) => {
     if (!userId) return res.status(404).json({ message: "Id missing" });
     const tasks = await prisma.job.findMany({
       where: {
-        userId: userId
+        userId: userId,
       }
     })
     res.status(200).json({ data: tasks })
@@ -93,7 +94,7 @@ export const getCreatedTask = async (req, res) => {
   }
 }
 
-
+// get job detail
 export const getJobDetail = async (req, res) => {
   try {
     const { jobId } = req.params;
@@ -192,6 +193,9 @@ export const deleteJob = async (req, res) => {
     res.status(500).json({ message: "Failed" });
   }
 };
+
+
+
 
 export const completeJob = async (req, res) => {
   try {

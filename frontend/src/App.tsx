@@ -84,13 +84,13 @@ function App() {
         <Route path="/profile-complete" element={<Onboarding />} />
         <Route path="/tasks/:id" element={<UserTaskDetail />} />
         <Route path="/profile" element={<Profile />} />
+
         <Route element={<ProtectedRoute />}>
           <Route path="dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="my-tasks" element={<DashboardTask />} />
             <Route path="my-tasks/:id" element={<TaskDetail />} />
             <Route path="applications" element={<Applications />} />
-  
             <Route path="messages" element={<Messages />} />
             <Route path="applied-tasks" element={<Appliedtask />} />
           </Route>
