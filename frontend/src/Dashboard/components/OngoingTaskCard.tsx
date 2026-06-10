@@ -2,30 +2,26 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, MapPin, Wallet, User } from "lucide-react";
-import type { Task } from "./Taskcard";
+import type { WorkerApplicationType } from "./Sections";
+import { useSelector } from "react-redux";
+import type { RootState } from "store/store";
 
 type OngoingTaskCardProps = {
-  task? : {
-    id: string;
-    appliedAt: string;
-    jobId: string;
-    proposedPrice: string;
-    status: string;
-    workerId: string;
-    job: Task;
-  };
+  data: WorkerApplicationType;
 };
 
-export default function OngoingTaskCard({ task }: OngoingTaskCardProps) {
+export default function OngoingTaskCard({ data }: OngoingTaskCardProps) {
+  const { user } = useSelector((state: RootState) => state.auth);
+
   return (
     <Card className="w-full hover:shadow-lg transition">
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
-          <CardTitle>{task?.job?.title}</CardTitle>
-          <p className="text-sm text-muted-foreground">{task?.job?.category}</p>
+          <CardTitle>{data?.title}</CardTitle>
+          <p className="text-sm text-muted-foreground">{data?.category}</p>
         </div>
 
-        <Badge className="bg-green-600">{task?.status}</Badge>
+        <Badge className="bg-green-600">{data?.status}</Badge>
       </CardHeader>
 
       <CardContent className="space-y-4">
@@ -34,14 +30,14 @@ export default function OngoingTaskCard({ task }: OngoingTaskCardProps) {
           <User size={16} />
           <span>
             {/* {task.worker.firstName} {task.worker.lastName} */}
-            Koshish khadka
+            {data?.selectedWorker?.firstName} {data?.selectedWorker?.lastName}
           </span>
         </div>
 
         {/* Location */}
         <div className="flex items-center gap-2 text-sm">
           <MapPin size={16} />
-          <span>{task?.job?.location || "REMOTE"}</span>
+          <span>{data?.location}</span>
         </div>
 
         {/* Pricing */}
@@ -49,7 +45,7 @@ export default function OngoingTaskCard({ task }: OngoingTaskCardProps) {
           <Wallet size={16} />
           <span>
             Final Price:
-            <strong className="ml-1">NPR {task?.job?.budget}</strong>
+            <strong className="ml-1">NPR {data?.budget}</strong>
           </span>
         </div>
 
@@ -57,8 +53,8 @@ export default function OngoingTaskCard({ task }: OngoingTaskCardProps) {
         <div className="flex items-center gap-2 text-sm">
           <CalendarDays size={16} />
           <span>
-            {new Date(task?.job?.startDate).toLocaleDateString()} -{" "}
-            {new Date(task?.job?.endDate).toLocaleDateString()}
+            {new Date(data?.startDate).toLocaleDateString()} -{" "}
+            {new Date(data?.endDate).toLocaleDateString()}
           </span>
         </div>
 
@@ -77,14 +73,14 @@ export default function OngoingTaskCard({ task }: OngoingTaskCardProps) {
         {/* Actions */}
         <div className="flex gap-3 pt-2">
           <Button size="sm">View Details</Button>
-
           <Button size="sm" variant="outline">
-            Message Worker
+            Message
           </Button>
-
-          <Button size="sm" variant="secondary">
-            Mark Complete
-          </Button>
+          {user?.role === "WORKER" && (
+            <Button size="sm" variant="secondary">
+              Mark Complete
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>

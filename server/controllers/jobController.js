@@ -1,5 +1,7 @@
 import { prisma } from "../config/prisma.js";
 
+
+
 export const createJob = async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -74,6 +76,8 @@ export const listJobs = async (req, res) => {
     res.status(500).json({ message: "Failed" });
   }
 };
+
+
 
 // get created task -Tasker
 export const getCreatedTask = async (req, res) => {
@@ -195,8 +199,6 @@ export const deleteJob = async (req, res) => {
 };
 
 
-
-
 export const completeJob = async (req, res) => {
   try {
     const { jobId } = req.params;
@@ -221,6 +223,34 @@ export const completeJob = async (req, res) => {
     });
   } catch (error) {
     console.error("Failed", error);
+    res.status(500).json({ message: "Failed" });
+  }
+};
+
+
+// get approved that is In progress status task
+export const approvedTask = async (req, res) => {
+  try {
+    const userId = req.session.userId;
+
+    if (!userId) {
+      return res.status(404).json({ message: "Id missing" });
+    }
+
+    const task = await prisma.job.findFirst({
+      where: {
+        userId,
+        status: "IN_PROGRESS",
+      },
+      include: {
+        applications: true,
+        selectedWorker: true,
+      },
+    });
+
+    res.status(200).json({ data: task });
+  } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Failed" });
   }
 };

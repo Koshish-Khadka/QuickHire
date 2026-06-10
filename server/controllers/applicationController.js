@@ -1,55 +1,6 @@
 import { prisma } from "../config/prisma.js";
 
 // function to apply for a task 
-// export const applyToJob = async (req, res) => {
-//     try {
-//         const { jobId } = req.params;
-//         const { userId } = req.session; //worker id
-//         // console.log("job id", jobId, "user id", userId)
-//         if (!jobId || !userId) {
-//             return res.status(404).json({ message: "Id missing" })
-//         }
-
-//         const { coverLetter, proposedPrice } = req.body
-//         // verify job
-//         const job = await prisma.job.findUnique({
-//             where: {
-//                 id: jobId
-//             }
-//         })
-//         if (!job) return res.status(404).json({ message: "Job not found" })
-
-//         // verify if job is not applied by any other 
-//         if (job.status !== "OPEN" || job.selectedWorkerId !== null) {
-//             return res.status(400).json({ message: "This Job has already been assigned" })
-//         }
-
-//         const worker = await prisma.workerProfile.findUnique({
-//             where: {
-//                 userId: workerId,
-//             },
-//         });
-
-//         if (!worker.isAvailable) {
-//             throw new Error("Worker already assigned to another task");
-//         }
-
-//         const application = await prisma.application.create({
-//             data: {
-//                 jobId,
-//                 workerId: userId,
-//                 coverLetter: null,
-//                 proposedPrice,
-//                 status: "PENDING"
-//             }
-//         })
-//         res.status(201).json({ message: "Application successfuly applied", data: application })
-//     } catch (error) {
-//         console.log("failed at job apply", error)
-//         res.status(500).json({ message: "Server error" })
-//     }
-// };
-
 export const applyToJob = async (req, res) => {
     try {
         const { jobId } = req.params;
@@ -117,7 +68,7 @@ export const applyToJob = async (req, res) => {
 export const getJobApplications = async (req, res) => {
     try {
         const { jobId } = req.params;
-        console.log("jobId jobApplications", jobId);
+        // console.log("jobId jobApplications", jobId);
         const applications = await prisma.application.findMany({
             where: {
                 jobId: jobId
@@ -183,59 +134,6 @@ export const getWorkerApplications = async (req, res) => {
 
 
 // function to update the application status 
-// export const updateApplicationStatus = async (req, res) => {
-//     try {
-//         const { id: applicationId, workerId } = req.body
-
-//         if (!applicationId || !workerId) return res.status(404).json({ message: "ids missing" })
-
-//         // find that application exists
-//         const application = await prisma.application.findUnique({ where: { id: applicationId } })
-//         if (!application) return res.status(404).json({ message: "application not found" })
-
-//         const worker = await prisma.workerProfile.findUnique({
-//             where: {
-//                 userId: workerId,
-//             },
-//         });
-//         if (!worker) return res.status(404).json({ message: "Worker not found" })
-
-
-//         if (!worker.isAvailable) {
-//             throw new Error("Worker already assigned to another task");
-//         }
-
-
-//         await prisma.$transaction(async (tx) => {
-
-//             await tx.application.update({
-//                 where: {
-//                     id: applicationId
-//                 }, data: {
-//                     status: "APPROVED"
-//                 }
-//             })
-
-//             await tx.workerProfile.update({
-//                 where: {
-//                     userId: workerId,
-//                 },
-//                 data: {
-//                     isAvailable: false
-//                 }
-//             })
-
-
-//         })
-
-//         res.status(200).json({ message: "Status updated successfully" })
-
-//     } catch (error) {
-//         console.log("failed to update application status", error)
-//         res.status(500).json({ message: "Server error" })
-//     }
-// };
-
 export const updateApplicationStatus = async (req, res) => {
     try {
         const { id: applicationId } = req.body
@@ -302,7 +200,7 @@ export const updateApplicationStatus = async (req, res) => {
                     id: application.jobId,
                 },
                 data: {
-                    // status: "ASSIGNED",
+                    status: "IN_PROGRESS",
                     selectedWorkerId: application.workerId,
                 },
             });
@@ -364,7 +262,6 @@ export const getApplicationDetail = async (req, res) => {
         // find that application exists
         const application = await prisma.application.findUnique({ where: { id: applicationId } })
         if (!application) return res.status(404).json({ message: "application not found" })
-
         res.status(200).json({ data: application })
 
     } catch (error) {

@@ -1,31 +1,35 @@
 import { useQuery } from "@tanstack/react-query";
-import type { Task } from "../pages/DashboardTask";
 import OngoingTaskCard from "./OngoingTaskCard";
 import api from "@/lib/axios";
 import { TailSpin } from "react-loader-spinner";
 
-type WorkerApplicationType = {
+export type WorkerApplicationType = {
   id: string;
-  jobId: string;
-  workerId: string;
-  coverLetter: string;
-  proposedPrice: number;
+  location: string;
+  title: string;
   status: string;
-  appliedAt: string;
-  createdAt: string;
-  job: Task;
+  budget: string;
+  startDate: string;
+  endDate: string;
+  category: string;
+  selectedWorker: {
+    firstName: string;
+    lastName: string;
+  };
+  applications: {
+    proposedPrice: string;
+    status: string;
+  };
 };
 
 const Sections = () => {
-  const { data, isLoading, isError } = useQuery<WorkerApplicationType[]>({
-    queryKey: ["appliedTask"],
+  const { data, isLoading, isError } = useQuery<WorkerApplicationType>({
+    queryKey: ["approvedTask"],
     queryFn: async () => {
-      const res = await api.get("/applications/workers/applications");
+      const res = await api.get("/jobs/approved");
       return res.data.data;
     },
   });
-
-  const filterData = data?.filter((items) => items.status !== "PENDING");
 
   if (isError) {
     return <div>Error fetching applied tasks.</div>;
@@ -35,7 +39,7 @@ const Sections = () => {
     <div className="mt-6">
       <h2 className="text-xl font-semibold">OnGoing task</h2>
       <div className="my-4">
-        <p className="text-gray-400">No ongoing task yet.</p>
+
         {isLoading ? (
           <div className="flex justify-center items-center h-screen">
             <TailSpin
@@ -46,8 +50,10 @@ const Sections = () => {
               radius="1"
             />
           </div>
+        ) : data ? (
+          <OngoingTaskCard data={data} />
         ) : (
-          <OngoingTaskCard task={filterData?.[0]} />
+          <p className="text-gray-400">No ongoing task yet.</p>
         )}
       </div>
     </div>

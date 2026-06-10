@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  approvedTask,
   completeJob,
   createJob,
   deleteJob,
@@ -14,6 +15,7 @@ const router = express.Router();
 
 router.get("/", listJobs);
 router.get("/created", isAuthenticated, getCreatedTask)
+router.get("/approved", isAuthenticated, approvedTask)
 router.get("/:jobId", getJobDetail);
 router.post("/", isAuthenticated, canApply, createJob);
 router.patch("/:jobId", isAuthenticated, updateJob);
