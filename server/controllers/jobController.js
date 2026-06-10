@@ -88,6 +88,7 @@ export const getCreatedTask = async (req, res) => {
     const tasks = await prisma.job.findMany({
       where: {
         userId: userId,
+        status: "OPEN",
       }
     })
     res.status(200).json({ data: tasks })

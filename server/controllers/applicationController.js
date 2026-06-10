@@ -118,7 +118,8 @@ export const getWorkerApplications = async (req, res) => {
         const { userId } = req.session;
         const applications = await prisma.application.findMany({
             where: {
-                workerId: userId
+                workerId: userId,
+                status: "PENDING",
             },
             include: {
                 job: true

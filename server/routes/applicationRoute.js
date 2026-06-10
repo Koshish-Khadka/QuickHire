@@ -14,9 +14,9 @@ const router = express.Router();
 
 router.post("/:jobId", isAuthenticated, applyToJob);
 router.patch("/update", isAuthenticated, updateApplicationStatus);
-router.get("/workers/applications", isAuthenticated, getWorkerApplications);
+router.get("/workers/applications", isAuthenticated, getWorkerApplications); //used
 router.get("/workers/allApplications", isAuthenticated, getAllJobApplications);
-router.get("/:jobId/applications", isAuthenticated, getJobApplications);
+router.get("/:jobId/applications", isAuthenticated, getJobApplications); //used
 router.get("/applications/:applicationId", isAuthenticated, getApplicationDetail);
 
 export default router;
